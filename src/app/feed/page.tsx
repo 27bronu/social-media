@@ -5,6 +5,7 @@ function Feed() {
   return (
     <div>
       <Posts />
+      <p></p>
     </div>
   );
 }
