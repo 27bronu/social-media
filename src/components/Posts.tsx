@@ -113,16 +113,16 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                     className='w-8 h-8 rounded-full mr-3'
                   />
                   <div>
-                    <p className='text-xs'>
+                    <p className='text-sm'>
                       @{comment.username}: {comment.text}
                     </p>
                     <div className='flex items-center mb-3'>
                       <FaHeart className='mr-1' />
-                      <p className='text-xs mr-2'>
+                      <p className='text-sm mr-2'>
                         {comment.likes} {comment.likes === 1 ? "Like" : "Likes"}
                       </p>
                       <FaHeartBroken className='mr-1' />
-                      <p className='text-xs'>
+                      <p className='text-sm'>
                         {comment.dislikes}{" "}
                         {comment.dislikes === 1 ? "Dislike" : "Dislikes"}
                       </p>
