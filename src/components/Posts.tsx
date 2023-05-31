@@ -65,17 +65,17 @@ const formatDate = (dateString: string | number | Date) => {
 
 const Posts: React.FC<PostsProps> = ({ posts }) => {
   return (
-    <div className='bg-gray-100 text-black h-auto px-8 py-4'>
+    <div className='bg-gray-500 text-black h-auto px-8 py-4 rounded-lg'>
       {posts.map((post) => (
         <div key={post.id} className='bg-white rounded-lg shadow-md p-4 mb-4'>
           <div className='flex items-center mb-4'>
             <img
               src={`https://www.gravatar.com/avatar/${post.gravatar_hash}`}
               alt='Profile Picture'
-              className='w-8 h-8 rounded-full mr-2'
+              className='w-12 h-12 rounded-full mr-2 drop-shadow-xl'
             />
             <div>
-              <h2 className='text-lg font-bold mb-1'>{post.name}</h2>
+              <h2 className='text-lg font-bold -mb-1'>{post.name}</h2>
               <h3 className='text-sm'>@{post.username}</h3>
             </div>
           </div>
@@ -84,7 +84,7 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
             <img
               src={post.media}
               alt='Post Image'
-              className='mb-4 w-full h-full object-cover'
+              className='mb-4 w-full h-full object-cover rounded-lg drop-shadow-xl'
             />
           ) : (
             <p className='antialiased text-lg text-red-500 pb-2'>
@@ -110,19 +110,19 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
                   <img
                     src={`https://www.gravatar.com/avatar/${comment.gravatar_hash}`}
                     alt='Profile Picture'
-                    className='w-6 h-6 rounded-full mr-2'
+                    className='w-8 h-8 rounded-full mr-3'
                   />
                   <div>
-                    <p className='text-sm'>
+                    <p className='text-xs'>
                       @{comment.username}: {comment.text}
                     </p>
-                    <div className='flex items-center'>
+                    <div className='flex items-center mb-3'>
                       <FaHeart className='mr-1' />
-                      <p className='text-sm mr-2'>
+                      <p className='text-xs mr-2'>
                         {comment.likes} {comment.likes === 1 ? "Like" : "Likes"}
                       </p>
                       <FaHeartBroken className='mr-1' />
-                      <p className='text-sm'>
+                      <p className='text-xs'>
                         {comment.dislikes}{" "}
                         {comment.dislikes === 1 ? "Dislike" : "Dislikes"}
                       </p>
@@ -184,7 +184,9 @@ const Feed = () => {
   return (
     <div className='bg-gray-900 text-white min-h-screen'>
       <div className='container mx-auto px-4 py-8 max-w-screen-lg'>
-        <h1 className='text-4xl font-bold text-center mb-8'>Feed</h1>
+        <h1 className='text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
+          Feed
+        </h1>
         <Posts posts={posts} />
       </div>
     </div>
