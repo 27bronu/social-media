@@ -1,5 +1,6 @@
-"use client";
+"use client"
 
+//import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import Link from "next/link";
@@ -12,8 +13,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [popUpMessage, setPopUpMessage] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
-
-  //função para fazer o registro de um novo utilizador
+  //const router = useRouter();
+  
+  // função para fazer o login
   const addUser = () => {
     const user = {
       username: username,
@@ -23,7 +25,12 @@ const Login = () => {
     axios
       .post("http://192.168.0.72:4000/api/auth/login", user)
       .then((res) => {
+        const token = res.data?.token;
+        if (token) {
+          localStorage.setItem("token", token);
+        }
         showPopUpMessage(res.data?.message);
+        //router.push("/feed"); 
       })
       .catch((err) => {
         if (err.response) {
@@ -34,18 +41,18 @@ const Login = () => {
       });
   };  
 
-  //função para ver/esconder a password
+  // função para ver/esconder a password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
   
-  //função para aparecer o pop up 
+  // função para aparecer o pop up 
   function showPopUpMessage(message: string) {
     setPopUpMessage(message);
     setShowPopUp(true);
   }
 
-  //função para fechar o pop up
+  // função para fechar o pop up
   const closePopUp = () => {
     setShowPopUp(false);
   };
@@ -118,5 +125,6 @@ const Login = () => {
       </div>
     </main>
   );
-}
-  export default Login;
+};
+
+export default Login;

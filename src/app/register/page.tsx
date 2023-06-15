@@ -46,7 +46,7 @@ export default function Registar() {
         showPopUpMessage(res.data?.message);
         setTimeout(() => {
           router.push("./login");
-        }, 3000); 
+        }, 2000); 
       })
       .catch((error) => {
         if (error.response) {
