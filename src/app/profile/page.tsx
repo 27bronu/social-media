@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getProfile } from "@/services/profile";
 import { getPostsByUserId } from "@/services/get-post-by-userid";
 import {
@@ -11,7 +11,6 @@ import {
 } from "react-icons/ai";
 
 import Link from "next/link";
-import Image from "next/image";
 
 
 export default function Profile() {
@@ -135,10 +134,10 @@ export default function Profile() {
                 Edit Profile
               </Link>
             </div>
-            <span className="flex text-center justify-center text-center">
+            <span className="flex text-center justify-center">
               My Posts
             </span>
-            <ul className="flex flex-col items-center text-center justify-center text-center mt-3">
+            <ul className="flex flex-col items-center justify-center text-center mt-3">
               {posts.map((post: any) => (
                 <div key={post.id} className="flex flex-col items-center pb-5">
                   {post.media ? (

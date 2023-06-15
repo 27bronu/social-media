@@ -6,7 +6,7 @@ import {
   AiOutlineDislike,
   AiFillDislike,
 } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getPostsById } from "@/services/get-post-by-id";
 import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
 import { CreateLikePost, RemoveLikePost } from "@/services/like-post";
@@ -18,10 +18,9 @@ import {
   RemoveDislikeComment,
 } from "@/services/dislike-comment";
 
-import Image from "next/image";
 import { CreateComment } from "@/services/create-comment";
 import { getProfile } from "@/services/profile";
-import { comment } from "postcss";
+
 
 export default function PostDetailsPage({
   params,
@@ -266,21 +265,17 @@ export default function PostDetailsPage({
     ? new Date(post.created_at).toLocaleDateString("en-GB")
     : "";
 
-  const formattedDateComment = comments
-    ? new Date(comments.created_at).toLocaleDateString("en-GB")
-    : "";
-
   return (
     <>
       <div className="">
-        {!!post ? (
+        {post ? (
           <>
             <ul className="flex flex-col">
               <div
                 id="commentspost"
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
-                <ul className="flex flex-col items-center text-center justify-center text-center mx-2">
+                <ul className="flex flex-col items-center text-center justify-center mx-2">
                   {post.media ? (
                     <>
                       <h2 className="font-bold text-left justify-left mb-1">

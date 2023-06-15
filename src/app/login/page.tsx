@@ -1,6 +1,6 @@
 "use client"
 
-//import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import Link from "next/link";
@@ -13,7 +13,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [popUpMessage, setPopUpMessage] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
-  //const router = useRouter();
+  const router = useRouter();
   
   // função para fazer o login
   const addUser = () => {
@@ -30,7 +30,7 @@ const Login = () => {
           localStorage.setItem("token", token);
         }
         showPopUpMessage(res.data?.message);
-        //router.push("/feed"); 
+        router.push("/feed"); 
       })
       .catch((err) => {
         if (err.response) {

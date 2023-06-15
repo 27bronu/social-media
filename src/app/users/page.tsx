@@ -65,7 +65,7 @@ export default function UsersPage() {
           </div>
         </form>
 
-        <ul className="flex flex-wrap text-center justify-center text-center mt-3">
+        <ul className="flex flex-wrap text-center justify-center mt-3">
           {loading ? (
             <li>Loading...</li>
           ) : usersToShow.length === 0 ? (
@@ -81,7 +81,7 @@ export default function UsersPage() {
                   href={`/users/${user.id}`}
                 >
                   <img
-                    className="w-24 h-24 mt-2 mt-3 mb-2 rounded-full shadow-lg"
+                    className="w-24 h-24 mt-3 mb-2 rounded-full shadow-lg"
                     src={`${user.media}`}
                     alt="image"
                   />

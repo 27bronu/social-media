@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CreateLikePost, RemoveLikePost } from "@/services/like-post";
 import { CreateDislikePost, RemoveDislikePost } from "@/services/dislike-post";
 import { getFriendsPosts } from "@/services/friends-posts";
@@ -13,14 +13,10 @@ import {
 import { BsPeople } from "react-icons/bs";
 
 import Link from "next/link";
-import Image from "next/image";
 
 
-export default function LikedPostsPage({
-  params,
-}: {
-  params: { userId: number };
-}) {
+
+export default function LikedPostsPage() {
   const [posts, setPosts] = useState<any>([]);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
   const [dislikedPosts, setDislikedPosts] = useState<number[]>([]);

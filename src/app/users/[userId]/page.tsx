@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserById } from "@/services/get-user-by-id";
 import { getPostsByUserId } from "@/services/get-post-by-userid";
 import { CreateLikePost, RemoveLikePost } from "@/services/like-post";
@@ -14,8 +14,6 @@ import {
 } from "react-icons/ai";
 
 import Link from "next/link";
-import Image from "next/image";
-
 
 export default function UserDetailsPage({
   params,
@@ -219,10 +217,10 @@ export default function UserDetailsPage({
                 )}
               </div>
             </div>
-            <span className="flex text-center justify-center text-center">
+            <span className="flex text-center justify-center">
               Posts
             </span>
-            <ul className="flex flex-col items-center text-center justify-center text-center mt-3">
+            <ul className="flex flex-col items-center justify-center text-center mt-3">
               {posts.map((post: any) => (
                 <div key={post.id} className="flex flex-col items-center pb-5">
                   {post.media ? (
