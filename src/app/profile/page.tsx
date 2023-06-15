@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getUserById } from "@/services/get-user-by-id";
+import { getProfile } from "@/services/profile";
 import { getPostsByUserId } from "@/services/get-post-by-userid";
-import { CreateLikePost, RemoveLikePost } from "@/services/like-post";
-import { CreateDislikePost, RemoveDislikePost } from "@/services/dislike-post";
-import { FollowUser, UnfollowUser } from "@/services/follow-unfollow-user";
 import {
   AiOutlineLike,
   AiOutlineDislike,
@@ -17,19 +14,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 
-export default function UserDetailsPage({
-  params,
-}: {
-  params: { userId: number };
-}) {
-  const [user, setUsers] = useState<any>();
+export default function Profile() {
+  const [user, setUser] = useState<any>();
   const [posts, setPosts] = useState<any>([]);
   const [likedPosts, setLikedPosts] = useState<number[]>([]);
   const [dislikedPosts, setDislikedPosts] = useState<number[]>([]);
-  const [isFollowed, setIsFollowed] = useState<boolean>(false);
 
   useEffect(() => {
-    // Função para recuperar os dados do armazenamento local
+    // Function to retrieve liked posts from local storage
     const getLikedPostsFromLocalStorage = (): number[] => {
       const likedPostsStr = localStorage.getItem("likedPosts");
       return likedPostsStr ? JSON.parse(likedPostsStr) : [];
@@ -40,58 +32,46 @@ export default function UserDetailsPage({
 
     setLikedPosts(getLikedPostsFromLocalStorage());
     setDislikedPosts(dislikedPosts);
-
-    getUserById(params.userId)
+    getProfile()
       .then((fetchedUser) => {
-        getPostsByUserId(params.userId)
+        setUser(fetchedUser);
+        getPostsByUserId(fetchedUser.id)
           .then((fetchedPosts) => {
-            setUsers(fetchedUser);
             setPosts(fetchedPosts);
           })
           .catch(() => console.log("erro posts"));
       })
-      .catch(() => console.log("erro posts"));
+      .catch(() => console.log("erro profile"));
   }, []);
 
-  useEffect(() => {
-    const localStorageFollowedUsers = localStorage.getItem("followedUsers");
-    if (localStorageFollowedUsers) {
-      const followedUsers = JSON.parse(localStorageFollowedUsers);
-      setIsFollowed(followedUsers.includes(params.userId));
-    }
-  }, []);
-
-  // Função para lidar com o evento de like
+  // Function to handle the like event
   const handleLike = async (postId: number) => {
     try {
       if (likedPosts.includes(postId)) {
-        // Se o post já foi curtido, remova o like
-        await RemoveLikePost(postId);
+        // If the post is already liked, remove the like
         const updatedLikedPosts = likedPosts.filter((id) => id !== postId);
         setLikedPosts(updatedLikedPosts);
         localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
-        console.log("Removeu o like");
+        console.log("Removed like");
       } else {
-        // Caso contrário, adicione o like
-        await CreateLikePost(postId);
+        // Otherwise, add the like
         const updatedLikedPosts = [...likedPosts, postId];
         setLikedPosts(updatedLikedPosts);
         localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
         setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
         localStorage.setItem("dislikedPosts", JSON.stringify(dislikedPosts));
-        console.log("Adicionou o like");
+        console.log("Added like");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o like:", error);
+      console.error("Error handling like:", error);
     }
   };
 
-  // Função para lidar com o evento de dislike
+  // Function to handle the dislike event
   const handleDislike = async (postId: number) => {
     try {
       if (dislikedPosts.includes(postId)) {
-        // Se o post já foi descurtido, remova o dislike
-        await RemoveDislikePost(postId);
+        // If the post is already disliked, remove the dislike
         const updatedDislikedPosts = dislikedPosts.filter(
           (id) => id !== postId
         );
@@ -100,10 +80,9 @@ export default function UserDetailsPage({
           "dislikedPosts",
           JSON.stringify(updatedDislikedPosts)
         );
-        console.log("Removeu o dislike");
+        console.log("Removed dislike");
       } else {
-        // Caso contrário, adicione o dislike
-        await CreateDislikePost(postId);
+        // Otherwise, add the dislike
         const updatedDislikedPosts = [...dislikedPosts, postId];
         setDislikedPosts(updatedDislikedPosts);
         localStorage.setItem(
@@ -112,71 +91,19 @@ export default function UserDetailsPage({
         );
         setLikedPosts(likedPosts.filter((id) => id !== postId));
         localStorage.setItem("likedPosts", JSON.stringify(likedPosts));
-        console.log("Adicionou o dislike");
+        console.log("Added dislike");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o dislike:", error);
-    }
-  };
-
-  const handleFollow = async () => {
-    try {
-      await FollowUser(params.userId);
-      setIsFollowed(true);
-
-      const localStorageFollowedUsers = localStorage.getItem("followedUsers");
-      if (localStorageFollowedUsers) {
-        const followedUsers = JSON.parse(localStorageFollowedUsers);
-        localStorage.setItem(
-          "followedUsers",
-          JSON.stringify([...followedUsers, params.userId])
-        );
-      } else {
-        localStorage.setItem("followedUsers", JSON.stringify([params.userId]));
-      }
-
-      // Increase the number of followers by 1
-      setUsers((prevUser: { followers: number; }) => ({
-        ...prevUser,
-        followers: prevUser.followers + 1,
-      }));
-    } catch (error) {
-      console.error("Erro ao lidar com o follow:", error);
-    }
-  };
-
-  const handleUnfollow = async () => {
-    try {
-      await UnfollowUser(params.userId);
-      setIsFollowed(false);
-
-      const localStorageFollowedUsers = localStorage.getItem("followedUsers");
-      if (localStorageFollowedUsers) {
-        const followedUsers = JSON.parse(localStorageFollowedUsers);
-        localStorage.setItem(
-          "followedUsers",
-          JSON.stringify(
-            followedUsers.filter((id: number) => id !== params.userId)
-          )
-        );
-      }
-
-      // Decrease the number of followers by 1
-      setUsers((prevUser: { followers: number; }) => ({
-        ...prevUser,
-        followers: prevUser.followers - 1,
-      }));
-    } catch (error) {
-      console.error("Erro ao lidar com o unfollow:", error);
+      console.error("Error handling dislike:", error);
     }
   };
 
   return (
     <>
-
-      {user && (
+ 
+      {user && posts && (
         <>
-          <div className="">
+          <div className="pl-60">
             <div className="flex flex-col items-center pb-5 mt-5">
               <img
                 className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg"
@@ -201,26 +128,15 @@ export default function UserDetailsPage({
                   Following: {user.following}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                {isFollowed ? (
-                  <button
-                    onClick={handleUnfollow}
-                    className="bg-gray-500 text-white rounded px-2 py-1 mt-2"
-                  >
-                    Unfollow
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleFollow}
-                    className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
-                  >
-                    Follow
-                  </button>
-                )}
-              </div>
+              <Link
+                className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
+                href={"/edit"}
+              >
+                Edit Profile
+              </Link>
             </div>
             <span className="flex text-center justify-center text-center">
-              Posts
+              My Posts
             </span>
             <ul className="flex flex-col items-center text-center justify-center text-center mt-3">
               {posts.map((post: any) => (
