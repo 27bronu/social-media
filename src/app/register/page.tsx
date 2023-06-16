@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
-export default function Registar() {
+export default function Register() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -17,7 +17,6 @@ export default function Registar() {
   const [popUpMessage, setPopUpMessage] = useState("");
   const [showPopUp, setShowPopUp] = useState(false);
   const router = useRouter();
-
 
   function showPopUpMessage(message: string) {
     setPopUpMessage(message);
@@ -39,14 +38,14 @@ export default function Registar() {
       name: name,
       password: password,
     };
-  
+
     axios
       .post("http://192.168.0.72:4000/api/auth/register", user)
       .then((res) => {
         showPopUpMessage(res.data?.message);
         setTimeout(() => {
           router.push("./login");
-        }, 2000); 
+        }, 2000);
       })
       .catch((error) => {
         if (error.response) {
@@ -59,83 +58,88 @@ export default function Registar() {
 
   return (
     <main>
-    {showPopUp && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-        <div className="bg-white p-8 rounded-lg">
-          <h2 className="text-2xl font-bold text-green-900 mb-4">ALERT</h2>
-          <p className="text-lg">{popUpMessage}</p>
-          <div className="flex justify-center mt-8">
-            <button className="bg-green-900 hover:bg-green-900 text-white font-bold py-2 px-6 rounded" onClick={closePopUp}>
-              Close
+      {showPopUp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4">ALERT</h2>
+            <p className="text-lg">{popUpMessage}</p>
+            <div className="flex justify-center mt-8">
+              <button
+                className="bg-blue-900 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded"
+                onClick={closePopUp}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col justify-center items-center h-screen bg-gray-900 text-white">
+        <div className="bg-gray-500 text-black h-screen px-8 py-6 rounded-lg">
+          <div className="box-border h-4/5 mt-1 w-72 p-4 border-1 border-blue-900 shadow-2xl flex flex-col justify-start items-center mb-4 bg-white rounded-lg">
+            <Image src="/logo.png" width={200} height={100} alt="" />
+            <label className="mt-4 text-sm">Email</label>
+            <input
+              type="email"
+              id="email"
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              className="mt-2 p-2 border-2 border-blue-900"
+            />
+            <label className="mt-4 text-sm">Username</label>
+            <input
+              type="text"
+              id="username"
+              onChange={(e) => setUsername(e.currentTarget.value)}
+              className="mt-2 p-2 border-2 border-blue-900"
+            />
+            <label className="mt-4 text-sm">Name</label>
+            <input
+              type="text"
+              id="name"
+              onChange={(e) => setName(e.currentTarget.value)}
+              className="mt-2 p-2 border-2 border-blue-900"
+            />
+            <label className="mt-4 text-sm">Password</label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                onChange={(e) => setPassword(e.currentTarget.value)}
+                className="mt-2 p-2 border-2 border-blue-900"
+              />
+              <span
+                className="absolute right-2 text-lg cursor-pointer top-7 transform -translate-y-1/2"
+                style={{
+                  margin: "0 0.5rem",
+                }}
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? (
+                  <BsEyeSlash className="text-lg" />
+                ) : (
+                  <BsEye className="text-lg" />
+                )}
+              </span>
+            </div>
+            <button
+              onClick={addUser}
+              className="mt-4 mb-4 bg-blue-900 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded"
+            >
+              Continue
             </button>
           </div>
-        </div>
-      </div>
-    )}
-
-      <div className="flex flex-col justify-center items-center h-screen">
-        <div className="box-border h-4/5 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center mb-4">
-          <Image src="/logosocial.png" width={200} height={100} alt="" />
-          <label className="mt-4 text-sm">Email</label>
-          <input
-            type="email"
-            id="email"
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
-          />
-          <label className="mt-4 text-sm">Username</label>
-          <input
-            type="text"
-            id="username"
-            onChange={(e) => setUsername(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
-          />
-          <label className="mt-4 text-sm">Name</label>
-          <input
-            type="text"
-            id="name"
-            onChange={(e) => setName(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
-          />
-          <label className="mt-4 text-sm">Password</label>
-          <div className="relative flex items-center">
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              className="mt-2 p-2 border-2 border-green-900"
-            />
-            <span
-              className="absolute right-2 text-lg cursor-pointer top-7 transform -translate-y-1/2"
-              style={{
-                margin: "0 0.5rem",
-              }}
-              onClick={togglePasswordVisibility}
-            >
-              {showPassword ? (
-                <BsEyeSlash className="text-lg" />
-              ) : (
-                <BsEye className="text-lg" />
-              )}
-            </span>
+          <div className="box-border h-20 mt-8 w-72 p-4 border-1 border-blue-500 shadow-2xl flex flex-col justify-start items-center bg-white rounded-lg">
+            <h1 className="mt-4 text-sm">
+              <div>
+                Already have an account? ‎
+                <Link className="underline text-blue-900" href="/login">
+                  Log in.
+                </Link>
+              </div>
+            </h1>
           </div>
-          <button
-            onClick={addUser}
-            className="mt-5 bg-green-900 hover:bg-green-600 text-white font-bold py-2 px-6 rounded"
-          >
-            Continue
-          </button>
-        </div>
-        <div className="box-border h-20 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center">
-          <h1 className="mt-4" style={{ fontSize: "14px" }}>
-            <div>
-             Already have an account? ‎
-              <Link className="underline text-green-900 " href="/login">
-                Log in.
-              </Link>
-            </div>
-          </h1>
-        </div>
+      </div> 
       </div>
     </main>
   );
