@@ -70,7 +70,7 @@ export default function CreateResponseForm({
   };
   return (
     <>
-      <div className="responseIput">
+      <div className="responseIput ">
         <button
           onClick={handleToggleResponseInput}
           className="bg-blue-500 text-white mt-1 py-1 px-2 rounded-lg text-xs"

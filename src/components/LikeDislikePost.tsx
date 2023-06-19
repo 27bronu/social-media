@@ -93,21 +93,17 @@ export default function LikeDislikePost({ idPost }: { idPost: number }) {
 
   return (
     <>
-      <div className="">
-        <>
-          <div className="text-center justify-center flex flex-wrap my-2">
-            <button onClick={() => handleLikePost(idPost)}>
-              {likedPost.includes(idPost) ? <AiFillLike /> : <AiOutlineLike />}
-            </button>
-            <button onClick={() => handleDislikePost(idPost)}>
-              {dislikedPost.includes(idPost) ? (
-                <AiFillDislike />
-              ) : (
-                <AiOutlineDislike />
-              )}
-            </button>
-          </div>
-        </>
+      <div className="text-center justify-center flex flex-wrap my-2">
+        <button onClick={() => handleLikePost(idPost)}>
+          {likedPost.includes(idPost) ? <AiFillLike /> : <AiOutlineLike />}
+        </button>
+        <button onClick={() => handleDislikePost(idPost)}>
+          {dislikedPost.includes(idPost) ? (
+            <AiFillDislike />
+          ) : (
+            <AiOutlineDislike />
+          )}
+        </button>
       </div>
     </>
   );

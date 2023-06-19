@@ -110,25 +110,21 @@ export default function LikeDislikeComment({
 
   return (
     <>
-      <div className="">
-        <>
-          <div className="text-center justify-center flex flex-wrap my-2">
-            <button onClick={() => handleLikeComment(idComment)}>
-              {likedComment.includes(idComment) ? (
-                <AiFillLike />
-              ) : (
-                <AiOutlineLike />
-              )}
-            </button>
-            <button onClick={() => handleDislikeComment(idComment)}>
-              {dislikedComment.includes(idComment) ? (
-                <AiFillDislike />
-              ) : (
-                <AiOutlineDislike />
-              )}
-            </button>
-          </div>
-        </>
+      <div className="text-left justify-left flex flex-wrap my-1">
+        <button onClick={() => handleLikeComment(idComment)}>
+          {likedComment.includes(idComment) ? (
+            <AiFillLike />
+          ) : (
+            <AiOutlineLike />
+          )}
+        </button>
+        <button onClick={() => handleDislikeComment(idComment)}>
+          {dislikedComment.includes(idComment) ? (
+            <AiFillDislike />
+          ) : (
+            <AiOutlineDislike />
+          )}
+        </button>
       </div>
     </>
   );
