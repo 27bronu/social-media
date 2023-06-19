@@ -1,26 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getPostsById } from "@/services/get-post-by-id";
-import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
-import { CreateComment } from "@/services/create-comment";
+import { useEffect, useState } from "react";
+import { getCommentById } from "@/services/get-comment-by-id";
+import { getResponsesByCommentId } from "@/services/get-responses-by-commentid";
+
+import { CreateResponse } from "@/services/create-response";
 import { getProfile } from "@/services/profile";
 import CreateResponseForm from "@/components/CreateResponse";
 import Link from "next/link";
-import LikeDislikePost from "@/components/LikeDislikePost";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
+import LikeDislikeResponse from "@/components/LikeDislikeResponse";
 
-export default function PostDetailsPage({
+export default function CommentDetailsPage({
   params,
 }: {
-  params: { postId: number };
+  params: { commentId: number };
 }) {
   const [user, setUser] = useState<any>();
-  const [post, setPost] = useState<any>();
-  const [comments, setComments] = useState<any>([]);
-  const [commentInput, setCommentInput] = useState("");
-  const [imageCommentInput, setimageCommentInput] = useState("");
-  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [comment, setComments] = useState<any>([]);
+  const [responses, setResponses] = useState<any>();
+  const [responseInput, setResponseInput] = useState("");
+  const [imageResponseInput, setimageResponseInput] = useState("");
+  const [showResponseInput, setShowResponseInput] = useState(false);
 
   useEffect(() => {
     getProfile()
@@ -31,91 +32,95 @@ export default function PostDetailsPage({
         console.log("erro user");
       });
 
-    getPostsById(params.postId)
-      .then((fetchedPosts) => {
-        getCommentsByPostId(params.postId)
-          .then((fetchedComments) => {
-            setPost(fetchedPosts);
-            setComments(fetchedComments);
+    getCommentById(params.commentId)
+      .then((fetchedComment) => {
+        getResponsesByCommentId(params.commentId)
+          .then((fetchedResponses) => {
+            setComments(fetchedComment);
+            setResponses(fetchedResponses);
           })
-          .catch(() => console.log("erro comments"));
+          .catch(() => console.log("erro responses"));
       })
-      .catch(() => console.log("erro posts"));
+      .catch(() => console.log("erro comment"));
   }, []);
 
-  const handleCommentInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentInput(event.target.value);
+  const handleResponseInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setResponseInput(event.target.value);
   };
 
-  const handleImageCommentInput = (
+  const handleImageResponseInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setimageCommentInput(reader.result as string);
+        setimageResponseInput(reader.result as string);
       };
       reader.readAsDataURL(file);
     } else {
-      setimageCommentInput("");
+      setimageResponseInput("");
     }
   };
 
-  const handleCommentSubmit = async () => {
-    if (commentInput.length <= 0) {
-      console.log("Comment lenght 0");
+  const handleResponseSubmit = async () => {
+    if (responseInput.length <= 0) {
+      console.log("Response lenght 0");
     }
     try {
-      // Verifique se os valores de commentInput e imageCommentInput estão corretos
-      const newComment = {
-        id: comments.length + 1,
-        postId: params.postId,
+      // Verifique se os valores de ResponseInput e imageResponseInput estão corretos
+      const newResponse = {
+        id: responses.length + 1,
+        commentId: params.commentId,
         username: user.username, // Substitua por onde você obtém o nome de usuário do novo comentário
-        text: commentInput,
-        image: imageCommentInput,
+        text: responseInput,
+        image: imageResponseInput,
         created_at: new Date(),
       };
 
       // Chame a função de serviço CreateComment com os argumentos corretos
-      await CreateComment(newComment.postId, newComment.text, newComment.image);
+      await CreateResponse(
+        newResponse.commentId,
+        newResponse.text,
+        newResponse.image
+      );
 
       // Atualize o estado dos comentários
-      setComments([newComment, ...comments]);
-      setCommentInput("");
-      setimageCommentInput("");
+      setResponses([newResponse, ...responses]);
+      setResponseInput("");
+      setimageResponseInput("");
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }
   };
 
-  const handleToggleCommentInput = () => {
-    setShowCommentInput(!showCommentInput);
+  const handleToggleResponseInput = () => {
+    setShowResponseInput(!showResponseInput);
   };
 
-  const formattedDatePost = post
-    ? new Date(post.created_at).toLocaleDateString("en-GB")
+  const formattedDatePost = comment
+    ? new Date(comment.created_at).toLocaleDateString("en-GB")
     : "";
 
   return (
     <>
       <div className="">
-        {post ? (
+        {!!comment ? (
           <>
             <ul className="flex flex-col">
               <div
-                id="commentspost"
+                id="responseComment"
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
-                <ul className="flex flex-col items-center text-center justify-center mx-2">
-                  {post.media ? (
+                <ul className="flex flex-col items-center text-center justify-center text-center mx-2">
+                  {comment.media ? (
                     <>
                       <h2 className="font-bold text-left justify-left mb-1">
-                        @{post.username}
+                        @{comment.username}
                       </h2>
                       <img
                         className="h-80 border border-gray-200 rounded-lg"
-                        src={post.media}
+                        src={comment.media}
                         alt={""}
                       />
                     </>
@@ -124,82 +129,88 @@ export default function PostDetailsPage({
                   )}
                 </ul>
                 <p className="text-center justify-center mt-2 pl-2 mb-1 mx-44 font-medium text-gray-900 dark:text-white">
-                  {post.post}
+                  {comment.text}
                 </p>
-                <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                <div className="flex text-center justify-center">
+                  <LikeDislikeComment
+                    idComment={comment.id}
+                  ></LikeDislikeComment>
+                </div>
                 <p className="text-center justify-center text-xs">
                   Created at: {formattedDatePost}
                 </p>
                 <hr />
 
-                <div className="commentIput">
+                <div className="responseInput">
                   <button
-                    onClick={handleToggleCommentInput}
+                    onClick={handleToggleResponseInput}
                     className="bg-blue-500 text-white mt-1 py-1 px-2 rounded-lg text-sm"
                   >
-                    {showCommentInput ? "- Hide" : "+ New Comment"}
+                    {showResponseInput ? "- Hide" : "+ New Response"}
                   </button>
-                  {showCommentInput && (
+                  {showResponseInput && (
                     <div>
                       <input
                         type="text"
-                        placeholder="Comment"
-                        value={commentInput}
-                        onChange={handleCommentInput}
+                        placeholder="Response"
+                        value={responseInput}
+                        onChange={handleResponseInput}
                         className="text-black border border-gray-300 rounded-lg mr-1 p-1 mb-2 text-sm"
                       />
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageCommentInput}
+                        onChange={handleImageResponseInput}
                         className="p-1 mb-2 text-sm"
                       />
-                      {imageCommentInput && (
+                      {imageResponseInput && (
                         <img
-                          src={imageCommentInput}
+                          src={imageResponseInput}
                           alt="Selected Image"
                           className="max-w-full max-h-44 mb-2"
                         />
                       )}
                       <button
-                        onClick={handleCommentSubmit}
+                        onClick={handleResponseSubmit}
                         className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
                       >
-                        Add Comment
+                        Add Response
                       </button>
                     </div>
                   )}
                 </div>
                 <div className="">
-                  {comments.map((comment: any) => (
+                  {responses?.map((response: any) => (
                     <>
                       <li
                         className="mt-2 px-2 py-1 flex flex-wrap border border-gray-300 rounded-lg"
-                        key={comment.id}
+                        key={response.id}
                       >
                         <div className="flex flex-col">
                           <div className="flex flex-wrap">
                             <span className="font-bold text-sm">
-                              @{comment.username}:
+                              @{response.username}:
                             </span>
-                            <span className="ml-1 text-sm">{comment.text}</span>
+                            <span className="ml-1 text-sm">
+                              {response.text}
+                            </span>
                           </div>
                           <div className="align-left text-left justify-left">
-                            {comment.media && (
+                            {response.media && (
                               <>
-                                {comment.showImage ? (
+                                {response.showImage ? (
                                   <>
                                     <button
                                       onClick={() =>
-                                        setComments((prevComments: any) =>
-                                          prevComments.map((c: any) => {
-                                            if (c.id === comment.id) {
+                                        setResponses((prevResponses: any) =>
+                                          prevResponses.map((r: any) => {
+                                            if (r.id === comment.id) {
                                               return {
-                                                ...c,
+                                                ...r,
                                                 showImage: false,
                                               };
                                             }
-                                            return c;
+                                            return r;
                                           })
                                         )
                                       }
@@ -209,22 +220,22 @@ export default function PostDetailsPage({
                                     </button>
                                     <img
                                       className="h-52 my-2"
-                                      src={comment.media}
+                                      src={response.media}
                                       alt=""
                                     />
                                   </>
                                 ) : (
                                   <button
                                     onClick={() =>
-                                      setComments((prevComments: any) =>
-                                        prevComments.map((c: any) => {
-                                          if (c.id === comment.id) {
+                                      setResponses((prevResponses: any) =>
+                                        prevResponses.map((r: any) => {
+                                          if (r.id === response.id) {
                                             return {
-                                              ...c,
+                                              ...r,
                                               showImage: true,
                                             };
                                           }
-                                          return c;
+                                          return r;
                                         })
                                       )
                                     }
@@ -237,28 +248,19 @@ export default function PostDetailsPage({
                             )}
                           </div>
                           <div className="flex flex-col">
-                            <LikeDislikeComment
-                              idComment={comment.id}
-                            ></LikeDislikeComment>
+                            <LikeDislikeResponse
+                              idResponse={response.id}
+                            ></LikeDislikeResponse>
 
                             <p className="text-left justify-left text-xs">
                               Created at:{" "}
-                              {new Date(comment.created_at).toLocaleDateString(
+                              {new Date(response.created_at).toLocaleDateString(
                                 "en-GB"
                               )}
                             </p>
                           </div>
-                          <CreateResponseForm
-                            commentId={comment.id}
-                            username={user.username}
-                          />
                         </div>
                       </li>
-                      <div className="text-center font-bold justify-center bg-gray-500 text-white px-2 py-1 rounded-lg text-xs">
-                        <Link href={`/comments/${comment.id}`}>
-                          Show Comment
-                        </Link>
-                      </div>
                     </>
                   ))}
                 </div>

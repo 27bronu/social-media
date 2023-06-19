@@ -28,7 +28,6 @@ export default function UsersPage() {
       setUsers(fetchedUsers);
       setLoading(false);
     }
-
     fetchData();
   }, []);
 
