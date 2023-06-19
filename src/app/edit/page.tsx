@@ -14,15 +14,17 @@ const EditAccount = () => {
   const token = localStorage.getItem("token");
 
   //função para selecionar um file
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfilePictureChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const allowedFileTypes = [".png", ".jpg", ".gif"];
       const fileType = file.name.substring(file.name.lastIndexOf("."));
-  
+
       if (allowedFileTypes.includes(fileType)) {
         setMedia(file);
-  
+
         const reader = new FileReader();
         reader.onload = () => {
           setMediaPreview(reader.result as string);
@@ -31,14 +33,34 @@ const EditAccount = () => {
       } else {
         setMedia(null);
         setMediaPreview(null);
-        setPopupMessage("Invalid file type. Please select a PNG, JPG, or GIF file.");
+        setPopupMessage(
+          "Invalid file type. Please select a PNG, JPG, or GIF file."
+        );
         setShowPopup(true);
       }
     }
   };
+  //função para validar se o username tem mais de 3 caracteres e se a password tem mais de 5 caracteres
+  const validateForm = () => {
+    if (username.length > 0 && username.length < 3) {
+      setPopupMessage("Username must be at least 3 characters long.");
+      setShowPopup(true);
+      return false;
+    }
+    if (password.length > 0 && password.length < 5) {
+      setPopupMessage("Password must be at least 5 characters long.");
+      setShowPopup(true);
+      return false;
+    }
+    return true;
+  };
 
-  //funçao para alterar o perfil 
+  //funçao para alterar o perfil
   const handleSaveChanges = () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append("username", username);
     formData.append("name", name);
@@ -63,7 +85,6 @@ const EditAccount = () => {
         setShowPopup(true);
       });
   };
-
   return (
     <main>
       {showPopup && (
@@ -102,8 +123,7 @@ const EditAccount = () => {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                >
-                </div>
+                ></div>
               )}
             </div>
             <div className="text-sm mb-8"></div>

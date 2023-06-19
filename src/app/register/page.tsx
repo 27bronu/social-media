@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
@@ -18,7 +17,7 @@ export default function Register() {
   const [showPopUp, setShowPopUp] = useState(false);
   const router = useRouter();
 
-  function showPopUpMessage(message: string) {
+  function showPopUpMessage(message:string) {
     setPopUpMessage(message);
     setShowPopUp(true);
   }
@@ -31,7 +30,35 @@ export default function Register() {
     setShowPassword(!showPassword);
   }
 
+  function validateEmail(email:string) {
+    const emailRegex = /\S+@\S+\.\S+/;
+    return emailRegex.test(email);
+  }
+
+  function validateUsername(username:string) {
+    return username.length >= 3;
+  }
+
+  function validatePassword(password:string) {
+    return password.length >= 5;
+  }
+
   function addUser() {
+    if (!validateEmail(email)) {
+      showPopUpMessage("Invalid email address");
+      return;
+    }
+
+    if (!validateUsername(username)) {
+      showPopUpMessage("Username must be at least 3 characters long");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      showPopUpMessage("Password must be at least 5 characters long");
+      return;
+    }
+
     const user = {
       email: email,
       username: username,
@@ -83,20 +110,26 @@ export default function Register() {
             <input
               type="email"
               id="email"
+              value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
               className="mt-2 p-2 border-2 border-blue-900"
+              required
             />
             <label className="mt-4 text-sm">Username</label>
             <input
               type="text"
               id="username"
+              value={username}
               onChange={(e) => setUsername(e.currentTarget.value)}
               className="mt-2 p-2 border-2 border-blue-900"
+              minLength={3}
+              required
             />
             <label className="mt-4 text-sm">Name</label>
             <input
               type="text"
               id="name"
+              value={name}
               onChange={(e) => setName(e.currentTarget.value)}
               className="mt-2 p-2 border-2 border-blue-900"
             />
@@ -105,8 +138,11 @@ export default function Register() {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
+                value={password}
                 onChange={(e) => setPassword(e.currentTarget.value)}
                 className="mt-2 p-2 border-2 border-blue-900"
+                minLength={5}
+                required
               />
               <span
                 className="absolute right-2 text-lg cursor-pointer top-7 transform -translate-y-1/2"
@@ -139,7 +175,7 @@ export default function Register() {
               </div>
             </h1>
           </div>
-      </div> 
+        </div>
       </div>
     </main>
   );
