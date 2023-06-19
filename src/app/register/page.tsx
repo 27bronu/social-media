@@ -76,7 +76,7 @@ export default function Register() {
       )}
 
       <div className="flex flex-col justify-center items-center h-screen bg-gray-900 text-white">
-        <div className="bg-gray-500 text-black h-screen px-8 py-6 rounded-lg">
+        <div className="bg-gray-500 text-black px-6 py-4 rounded-lg">
           <div className="box-border h-4/5 mt-1 w-72 p-4 border-1 border-blue-900 shadow-2xl flex flex-col justify-start items-center mb-4 bg-white rounded-lg">
             <Image src="/logo.png" width={200} height={100} alt="" />
             <label className="mt-4 text-sm">Email</label>
