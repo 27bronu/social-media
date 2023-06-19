@@ -12,7 +12,7 @@ import {
 
 import Link from "next/link";
 import Image from "next/image";
-
+import LikeDislikePost from "@/components/LikeDislikePost";
 
 export default function Profile() {
   const [user, setUser] = useState<any>();
@@ -100,10 +100,9 @@ export default function Profile() {
 
   return (
     <>
- 
       {user && posts && (
         <>
-          <div className="pl-60">
+          <div className="">
             <div className="flex flex-col items-center pb-5 mt-5">
               <img
                 className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg"
@@ -156,23 +155,7 @@ export default function Profile() {
                           <p className="text-sm break-words m-2">{post.post}</p>
                           <hr />
                         </Link>
-                        <div className="text-center justify-center flex flex-wrap my-2">
-                          <button onClick={() => handleLike(post.id)}>
-                            {likedPosts.includes(post.id) ? (
-                              <AiFillLike />
-                            ) : (
-                              <AiOutlineLike />
-                            )}
-                          </button>
-
-                          <button onClick={() => handleDislike(post.id)}>
-                            {dislikedPosts.includes(post.id) ? (
-                              <AiFillDislike />
-                            ) : (
-                              <AiOutlineDislike />
-                            )}
-                          </button>
-                        </div>
+                        <LikeDislikePost idPost={post.id}></LikeDislikePost>
                         <p className="text-center justify-center text-xs">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(
@@ -191,22 +174,7 @@ export default function Profile() {
                           <p className="text-sm break-words m-2">{post.post}</p>
                           <hr />
                         </Link>
-                        <div className="text-center justify-center flex flex-wrap my-2">
-                          <button onClick={() => handleLike(post.id)}>
-                            {likedPosts.includes(post.id) ? (
-                              <AiFillLike />
-                            ) : (
-                              <AiOutlineLike />
-                            )}
-                          </button>
-                          <button onClick={() => handleDislike(post.id)}>
-                            {dislikedPosts.includes(post.id) ? (
-                              <AiFillDislike />
-                            ) : (
-                              <AiOutlineDislike />
-                            )}
-                          </button>
-                        </div>
+                        <LikeDislikePost idPost={post.id}></LikeDislikePost>
                         <p className="text-center justify-center text-xs">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(

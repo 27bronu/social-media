@@ -11,17 +11,17 @@ import { getPostsById } from "@/services/get-post-by-id";
 import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
 import { CreateLikePost, RemoveLikePost } from "@/services/like-post";
 import { CreateDislikePost, RemoveDislikePost } from "@/services/dislike-post";
-
 import { CreateLikeComment, RemoveLikeComment } from "@/services/like-comment";
 import {
   CreateDislikeComment,
   RemoveDislikeComment,
 } from "@/services/dislike-comment";
-
-import Image from "next/image";
 import { CreateComment } from "@/services/create-comment";
 import { getProfile } from "@/services/profile";
-import { comment } from "postcss";
+import CreateResponseForm from "@/components/CreateResponse";
+import Link from "next/link";
+import LikeDislikePost from "@/components/LikeDislikePost";
+import LikeDislikeComment from "@/components/LikeDislikeComment";
 
 export default function PostDetailsPage({
   params,
@@ -31,12 +31,11 @@ export default function PostDetailsPage({
   const [user, setUser] = useState<any>();
   const [post, setPost] = useState<any>();
   const [comments, setComments] = useState<any>([]);
-  const [likedPost, setLikedPost] = useState<number[]>([]);
-  const [dislikedPost, setDislikedPost] = useState<number[]>([]);
+
   const [likedComment, setLikedComment] = useState<number[]>([]);
   const [dislikedComment, setDislikedComment] = useState<number[]>([]);
   const [commentInput, setCommentInput] = useState("");
-  const [imageInput, setImageInput] = useState("");
+  const [imageCommentInput, setimageCommentInput] = useState("");
   const [showCommentInput, setShowCommentInput] = useState(false);
 
   useEffect(() => {
@@ -47,31 +46,6 @@ export default function PostDetailsPage({
       .catch(() => {
         console.log("erro user");
       });
-    // POSTS
-    const getLikedPostsFromLocalStorage = (): number[] => {
-      const likedPostsStr = localStorage.getItem("likedPosts");
-      return likedPostsStr ? JSON.parse(likedPostsStr) : [];
-    };
-
-    const dislikedPostsStr = localStorage.getItem("dislikedPosts");
-    const dislikedPosts = dislikedPostsStr ? JSON.parse(dislikedPostsStr) : [];
-
-    setLikedPost(getLikedPostsFromLocalStorage());
-    setDislikedPost(dislikedPosts);
-
-    // COMMENTS
-    const getLikedCommentsFromLocalStorage = (): number[] => {
-      const likedCommentsStr = localStorage.getItem("likedComments");
-      return likedCommentsStr ? JSON.parse(likedCommentsStr) : [];
-    };
-
-    const dislikedCommentsStr = localStorage.getItem("dislikedComments");
-    const dislikedComments = dislikedCommentsStr
-      ? JSON.parse(dislikedCommentsStr)
-      : [];
-
-    setLikedComment(getLikedCommentsFromLocalStorage());
-    setDislikedComment(dislikedComments);
 
     getPostsById(params.postId)
       .then((fetchedPosts) => {
@@ -85,174 +59,47 @@ export default function PostDetailsPage({
       .catch(() => console.log("erro posts"));
   }, []);
 
-  const handleLikePost = async (postId: number) => {
-    try {
-      if (likedPost.includes(postId)) {
-        // Se o post já foi curtido, remova o like
-        await RemoveLikePost(postId);
-        const updatedLikedPosts = likedPost.filter((id) => id !== postId);
-        setLikedPost(updatedLikedPosts);
-        localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
-        console.log("Removeu o like");
-      } else {
-        // Caso contrário, adicione o like
-        await CreateLikePost(postId);
-        const updatedLikedPosts = [...likedPost, postId];
-        setLikedPost(updatedLikedPosts);
-        localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
-        setDislikedPost(dislikedPost.filter((id) => id !== postId));
-        localStorage.setItem(
-          "dislikedPosts",
-          JSON.stringify(dislikedPost.filter((id) => id !== postId))
-        );
-        console.log("Adicionou o like");
-      }
-    } catch (error) {
-      console.error("Erro ao lidar com o like:", error);
-    }
-  };
-
-  const handleDislikePost = async (postId: number) => {
-    try {
-      if (dislikedPost.includes(postId)) {
-        // Se o post já foi descurtido, remova o dislike
-        await RemoveDislikePost(postId);
-        const updatedDislikedPosts = dislikedPost.filter((id) => id !== postId);
-        setDislikedPost(updatedDislikedPosts);
-        localStorage.setItem(
-          "dislikedPosts",
-          JSON.stringify(updatedDislikedPosts)
-        );
-        console.log("Removeu o dislike");
-      } else {
-        // Caso contrário, adicione o dislike
-        await CreateDislikePost(postId);
-        const updatedDislikedPosts = [...dislikedPost, postId];
-        setDislikedPost(updatedDislikedPosts);
-        localStorage.setItem(
-          "dislikedPosts",
-          JSON.stringify(updatedDislikedPosts)
-        );
-        setLikedPost(likedPost.filter((id) => id !== postId));
-        localStorage.setItem(
-          "likedPosts",
-          JSON.stringify(likedPost.filter((id) => id !== postId))
-        );
-        console.log("Adicionou o dislike");
-      }
-    } catch (error) {
-      console.error("Erro ao lidar com o dislike:", error);
-    }
-  };
-
-  const handleLikeComment = async (commentId: number) => {
-    try {
-      if (likedComment.includes(commentId)) {
-        // Se o comment já foi curtido, remova o like
-        await RemoveLikeComment(commentId);
-        const updatedLikedComments = likedComment.filter(
-          (id) => id !== commentId
-        );
-        setLikedComment(updatedLikedComments);
-        localStorage.setItem(
-          "likedComments",
-          JSON.stringify(updatedLikedComments)
-        );
-        console.log("Removeu o like");
-      } else {
-        // Caso contrário, adicione o like
-        await CreateLikeComment(commentId);
-        const updatedLikedComments = [...likedComment, commentId];
-        setLikedComment(updatedLikedComments);
-        localStorage.setItem(
-          "likedComments",
-          JSON.stringify(updatedLikedComments)
-        );
-        setDislikedComment(dislikedComment.filter((id) => id !== commentId));
-        localStorage.setItem(
-          "dislikedComments",
-          JSON.stringify(dislikedComment.filter((id) => id !== commentId))
-        );
-        console.log("Adicionou o like");
-      }
-    } catch (error) {
-      console.error("Erro ao lidar com o like:", error);
-    }
-  };
-
-  const handleDislikeComment = async (commentId: number) => {
-    try {
-      if (dislikedComment.includes(commentId)) {
-        // Se o Comment já foi descurtido, remova o dislike
-        await RemoveDislikeComment(commentId);
-        const updatedDislikedComments = dislikedComment.filter(
-          (id) => id !== commentId
-        );
-        setDislikedComment(updatedDislikedComments);
-        localStorage.setItem(
-          "dislikedComments",
-          JSON.stringify(updatedDislikedComments)
-        );
-        console.log("Removeu o dislike");
-      } else {
-        // Caso contrário, adicione o dislike
-        await CreateDislikeComment(commentId);
-        const updatedDislikedComments = [...dislikedComment, commentId];
-        setDislikedComment(updatedDislikedComments);
-        localStorage.setItem(
-          "dislikedComments",
-          JSON.stringify(updatedDislikedComments)
-        );
-        setLikedComment(likedComment.filter((id) => id !== commentId));
-        localStorage.setItem(
-          "likedComments",
-          JSON.stringify(likedComment.filter((id) => id !== commentId))
-        );
-        console.log("Adicionou o dislike");
-      }
-    } catch (error) {
-      console.error("Erro ao lidar com o dislike:", error);
-    }
-  };
-
   const handleCommentInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCommentInput(event.target.value);
   };
 
-  const handleImageInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageCommentInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        setImageInput(reader.result as string);
+        setimageCommentInput(reader.result as string);
       };
       reader.readAsDataURL(file);
     } else {
-      setImageInput("");
+      setimageCommentInput("");
     }
   };
 
   const handleCommentSubmit = async () => {
     if (commentInput.length <= 0) {
-      console.log("COmment lenght 0");
+      console.log("Comment lenght 0");
     }
     try {
-      // Verifique se os valores de commentInput e imageInput estão corretos
+      // Verifique se os valores de commentInput e imageCommentInput estão corretos
       const newComment = {
         id: comments.length + 1,
         postId: params.postId,
         username: user.username, // Substitua por onde você obtém o nome de usuário do novo comentário
         text: commentInput,
-        image: imageInput,
+        image: imageCommentInput,
+        created_at: new Date(),
       };
 
       // Chame a função de serviço CreateComment com os argumentos corretos
       await CreateComment(newComment.postId, newComment.text, newComment.image);
 
       // Atualize o estado dos comentários
-      setComments([...comments, newComment]);
+      setComments([newComment, ...comments]);
       setCommentInput("");
-      setImageInput("");
+      setimageCommentInput("");
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }
@@ -264,10 +111,6 @@ export default function PostDetailsPage({
 
   const formattedDatePost = post
     ? new Date(post.created_at).toLocaleDateString("en-GB")
-    : "";
-
-  const formattedDateComment = comments
-    ? new Date(comments.created_at).toLocaleDateString("en-GB")
     : "";
 
   return (
@@ -299,27 +142,13 @@ export default function PostDetailsPage({
                 <p className="text-center justify-center mt-2 pl-2 mb-1 mx-44 font-medium text-gray-900 dark:text-white">
                   {post.post}
                 </p>
-                <div className="text-center justify-center flex flex-wrap my-2">
-                  <button onClick={() => handleLikePost(post.id)}>
-                    {likedPost.includes(post.id) ? (
-                      <AiFillLike />
-                    ) : (
-                      <AiOutlineLike />
-                    )}
-                  </button>
-                  <button onClick={() => handleDislikePost(post.id)}>
-                    {dislikedPost.includes(post.id) ? (
-                      <AiFillDislike />
-                    ) : (
-                      <AiOutlineDislike />
-                    )}
-                  </button>
-                </div>
+                <LikeDislikePost idPost={post.id}></LikeDislikePost>
                 <p className="text-center justify-center text-xs">
                   Created at: {formattedDatePost}
                 </p>
                 <hr />
-                <div className="">
+
+                <div className="commentIput">
                   <button
                     onClick={handleToggleCommentInput}
                     className="bg-blue-500 text-white mt-1 py-1 px-2 rounded-lg text-sm"
@@ -338,12 +167,12 @@ export default function PostDetailsPage({
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageInput}
+                        onChange={handleImageCommentInput}
                         className="p-1 mb-2 text-sm"
                       />
-                      {imageInput && (
+                      {imageCommentInput && (
                         <img
-                          src={imageInput}
+                          src={imageCommentInput}
                           alt="Selected Image"
                           className="max-w-full max-h-44 mb-2"
                         />
@@ -357,107 +186,124 @@ export default function PostDetailsPage({
                     </div>
                   )}
                 </div>
-                {comments.map((comment: any) => (
-                  <li
-                    className="mt-2 px-2 py-1 flex flex-wrap border border-gray-300 rounded-lg"
-                    key={comment.id}
-                  >
-                    <div className="flex flex-col">
-                      <div className="flex flex-wrap">
-                        <span className="font-bold text-sm">
-                          @{comment.username}:
-                        </span>
-                        <span className="ml-1 text-sm">{comment.text}</span>
-                      </div>
-                      <div className="align-left text-left justify-left">
-                        {comment.media && (
-                          <>
-                            {comment.showImage ? (
+                <div className="">
+                  {comments.map((comment: any) => (
+                    <>
+                      <li
+                        className="mt-2 px-2 py-1 flex flex-wrap border border-gray-300 rounded-lg"
+                        key={comment.id}
+                      >
+                        <div className="flex flex-col">
+                          <div className="flex flex-wrap">
+                            <span className="font-bold text-sm">
+                              @{comment.username}:
+                            </span>
+                            <span className="ml-1 text-sm">{comment.text}</span>
+                          </div>
+                          <div className="align-left text-left justify-left">
+                            {comment.media && (
                               <>
-                                <button
-                                  onClick={() =>
-                                    setComments((prevComments: any) =>
-                                      prevComments.map((c: any) => {
-                                        if (c.id === comment.id) {
-                                          return {
-                                            ...c,
-                                            showImage: false,
-                                          };
-                                        }
-                                        return c;
-                                      })
-                                    )
-                                  }
-                                  className="text-xs text-red-600"
-                                >
-                                  Hide Image
-                                </button>
-                                <img
-                                  className="h-52 my-2"
-                                  src={comment.media}
-                                  alt=""
-                                />
-                              </>
-                            ) : (
-                              <button
-                                onClick={() =>
-                                  setComments((prevComments: any) =>
-                                    prevComments.map((c: any) => {
-                                      if (c.id === comment.id) {
-                                        return {
-                                          ...c,
-                                          showImage: true,
-                                        };
+                                {comment.showImage ? (
+                                  <>
+                                    <button
+                                      onClick={() =>
+                                        setComments((prevComments: any) =>
+                                          prevComments.map((c: any) => {
+                                            if (c.id === comment.id) {
+                                              return {
+                                                ...c,
+                                                showImage: false,
+                                              };
+                                            }
+                                            return c;
+                                          })
+                                        )
                                       }
-                                      return c;
-                                    })
-                                  )
-                                }
-                                className="text-xs text-blue-600"
-                              >
-                                Show Image
-                              </button>
+                                      className="text-xs text-red-600"
+                                    >
+                                      Hide Image
+                                    </button>
+                                    <img
+                                      className="h-52 my-2"
+                                      src={comment.media}
+                                      alt=""
+                                    />
+                                  </>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      setComments((prevComments: any) =>
+                                        prevComments.map((c: any) => {
+                                          if (c.id === comment.id) {
+                                            return {
+                                              ...c,
+                                              showImage: true,
+                                            };
+                                          }
+                                          return c;
+                                        })
+                                      )
+                                    }
+                                    className="text-xs text-blue-600"
+                                  >
+                                    Show Image
+                                  </button>
+                                )}
+                              </>
                             )}
-                          </>
-                        )}
-                      </div>
-                      <div className="flex flex-col">
-                        <div className="flex flex-wrap">
-                          <button onClick={() => handleLikeComment(comment.id)}>
-                            {likedComment.includes(comment.id) ? (
-                              <AiFillLike />
-                            ) : (
-                              <AiOutlineLike />
-                            )}
-                          </button>
-                          <button
-                            onClick={() => handleDislikeComment(comment.id)}
-                          >
-                            {dislikedComment.includes(comment.id) ? (
-                              <AiFillDislike />
-                            ) : (
-                              <AiOutlineDislike />
-                            )}
-                          </button>
+                          </div>
+                          <div className="flex flex-col">
+                            <LikeDislikeComment
+                              idComment={comment.id}
+                            ></LikeDislikeComment>
+
+                            <p className="text-left justify-left text-xs">
+                              Created at:{" "}
+                              {new Date(comment.created_at).toLocaleDateString(
+                                "en-GB"
+                              )}
+                            </p>
+                          </div>
+                          <CreateResponseForm
+                            commentId={comment.id}
+                            username={user.username}
+                          />
                         </div>
-                        <button className="text-left justify-left text-xs">
-                          Reply
-                        </button>
-                        <p className="text-left justify-left text-xs">
-                          Created at:{" "}
-                          {new Date(comment.created_at).toLocaleDateString(
-                            "en-GB"
-                          )}
-                        </p>
+                      </li>
+                      <div className="text-center font-bold justify-center bg-gray-500 text-white px-2 py-1 rounded-lg text-xs">
+                        <Link href={`/comments/${comment.id}`}>
+                          Show Comment
+                        </Link>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </>
+                  ))}
+                </div>
               </div>
             </ul>
           </>
         ) : (
-          <div>Loading</div>
+          <div
+            className="m-80 flex flex-wrap text-center justify-center"
+            role="status"
+          >
+            <svg
+              aria-hidden="true"
+              className="w-9 h-9 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+            <span className="sr-only">Loading...</span>
+          </div>
         )}
       </div>
     </>
