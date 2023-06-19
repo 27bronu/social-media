@@ -44,59 +44,6 @@ export default function Profile() {
       .catch(() => console.log("erro profile"));
   }, []);
 
-  // Function to handle the like event
-  const handleLike = async (postId: number) => {
-    try {
-      if (likedPosts.includes(postId)) {
-        // If the post is already liked, remove the like
-        const updatedLikedPosts = likedPosts.filter((id) => id !== postId);
-        setLikedPosts(updatedLikedPosts);
-        localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
-        console.log("Removed like");
-      } else {
-        // Otherwise, add the like
-        const updatedLikedPosts = [...likedPosts, postId];
-        setLikedPosts(updatedLikedPosts);
-        localStorage.setItem("likedPosts", JSON.stringify(updatedLikedPosts));
-        setDislikedPosts(dislikedPosts.filter((id) => id !== postId));
-        localStorage.setItem("dislikedPosts", JSON.stringify(dislikedPosts));
-        console.log("Added like");
-      }
-    } catch (error) {
-      console.error("Error handling like:", error);
-    }
-  };
-
-  // Function to handle the dislike event
-  const handleDislike = async (postId: number) => {
-    try {
-      if (dislikedPosts.includes(postId)) {
-        // If the post is already disliked, remove the dislike
-        const updatedDislikedPosts = dislikedPosts.filter(
-          (id) => id !== postId
-        );
-        setDislikedPosts(updatedDislikedPosts);
-        localStorage.setItem(
-          "dislikedPosts",
-          JSON.stringify(updatedDislikedPosts)
-        );
-        console.log("Removed dislike");
-      } else {
-        // Otherwise, add the dislike
-        const updatedDislikedPosts = [...dislikedPosts, postId];
-        setDislikedPosts(updatedDislikedPosts);
-        localStorage.setItem(
-          "dislikedPosts",
-          JSON.stringify(updatedDislikedPosts)
-        );
-        setLikedPosts(likedPosts.filter((id) => id !== postId));
-        localStorage.setItem("likedPosts", JSON.stringify(likedPosts));
-        console.log("Added dislike");
-      }
-    } catch (error) {
-      console.error("Error handling dislike:", error);
-    }
-  };
 
   return (
     <>
