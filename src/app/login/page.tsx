@@ -17,6 +17,11 @@ const Login = () => {
 
   // função para fazer o login
   const addUser = () => {
+    if (!username || !password) {
+      showPopUpMessage("Please enter both username and password.");
+      return;
+    }
+
     const user = {
       username: username,
       password: password,
