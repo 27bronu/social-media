@@ -103,16 +103,13 @@ const DeleteAccount = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="max-w-md p-8 bg-white rounded-lg shadow">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-900">
+      <div className="bg-gray-500 text-black px-4 py-4 rounded-lg">
+      <div className="max-w-md p-10 bg-white rounded-lg shadow">
         <h1 className="text-3xl font-bold mb-4 text-center">Delete Account</h1>
         <p className="text-gray-600 mb-8 text-center">
           Are you sure you want to delete your account? This action cannot be undone.
         </p>
-
-        {username && (
-          <p className="text-gray-800 mb-4 text-center">{username}</p>
-        )}
 
         <div className="flex justify-center">
           <button
@@ -181,7 +178,7 @@ const DeleteAccount = () => {
 
         {isSuccessModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div className="bg-white max-w-md rounded-lg p-8">
+            <div className="bg-white max-w-md max-h-full p-16 rounded-lg">
               <h2 className="text-2xl font-bold mb-4 text-center">Account Deletion Successful</h2>
               <p className="text-center">Your account has been successfully deleted.</p>
             </div>
@@ -190,7 +187,7 @@ const DeleteAccount = () => {
 
         {isErrorModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-            <div className="bg-white max-w-md rounded-lg p-8">
+            <div className="bg-white max-w-md max-h-full p-14 rounded-lg">
               <h2 className="text-2xl font-bold mb-4 text-center">Account Deletion Failed</h2>
               <p className="text-center">Sorry, an error occurred while deleting your account.</p>
               <div className="flex justify-end mt-4">
@@ -206,6 +203,7 @@ const DeleteAccount = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };
