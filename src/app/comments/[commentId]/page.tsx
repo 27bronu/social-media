@@ -20,7 +20,9 @@ export default function CommentDetailsPage({
   const [comment, setComments] = useState<any>([]);
   const [responses, setResponses] = useState<any>();
   const [responseInput, setResponseInput] = useState("");
-  const [imageResponseInput, setimageResponseInput] = useState("");
+  const [imageResponseInput, setimageResponseInput] = useState<File | null>(
+    null
+  );
   const [showResponseInput, setShowResponseInput] = useState(false);
 
   useEffect(() => {
@@ -51,16 +53,22 @@ export default function CommentDetailsPage({
   const handleImageResponseInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setimageResponseInput(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setimageResponseInput("");
-    }
+    if (event.target.files && event.target.files.length > 0) {
+        const file = event.target.files[0];
+        const allowedFileTypes = [".png", ".jpg", ".gif"];
+        const fileType = file.name.substring(file.name.lastIndexOf("."));
+    
+        if (allowedFileTypes.includes(fileType)) {
+          setimageResponseInput(file);
+    
+          const reader = new FileReader();
+          
+          reader.readAsDataURL(file);
+        } else {
+          setimageResponseInput(null);
+
+        }
+      }
   };
 
   const handleResponseSubmit = async () => {
@@ -88,7 +96,7 @@ export default function CommentDetailsPage({
       // Atualize o estado dos comentários
       setResponses([newResponse, ...responses]);
       setResponseInput("");
-      setimageResponseInput("");
+      setimageResponseInput(null);
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }
@@ -105,7 +113,7 @@ export default function CommentDetailsPage({
   return (
     <>
       <div className="">
-        {!!comment ? (
+        {!!user ? (
           <>
             <ul className="flex flex-col">
               <div
@@ -113,11 +121,11 @@ export default function CommentDetailsPage({
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
                 <ul className="flex flex-col items-center text-center justify-center text-center mx-2">
+                  <h2 className="font-bold text-left justify-left mb-1">
+                    @{comment.username}
+                  </h2>
                   {comment.media ? (
                     <>
-                      <h2 className="font-bold text-left justify-left mb-1">
-                        @{comment.username}
-                      </h2>
                       <img
                         className="h-80 border border-gray-200 rounded-lg"
                         src={comment.media}
@@ -155,21 +163,21 @@ export default function CommentDetailsPage({
                         placeholder="Response"
                         value={responseInput}
                         onChange={handleResponseInput}
-                        className="text-black border border-gray-300 rounded-lg mr-1 p-1 mb-2 text-sm"
+                        className="text-black border border-gray-300 rounded-lg mr-1 p-1  text-sm"
                       />
                       <input
                         type="file"
+                        id="imageResponse"
                         accept="image/*"
                         onChange={handleImageResponseInput}
-                        className="p-1 mb-2 text-sm"
                       />
-                      {imageResponseInput && (
+                      {/* {imageResponseInput && (
                         <img
                           src={imageResponseInput}
                           alt="Selected Image"
                           className="max-w-full max-h-44 mb-2"
                         />
-                      )}
+                      )} */}
                       <button
                         onClick={handleResponseSubmit}
                         className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
