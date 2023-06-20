@@ -204,7 +204,7 @@ export default function CommentDetailsPage({
                             </span>
                           </div>
                           <div className="align-left text-left justify-left">
-                            {response.media && (
+                          {response.media && (
                               <>
                                 {response.showImage ? (
                                   <>
@@ -212,7 +212,7 @@ export default function CommentDetailsPage({
                                       onClick={() =>
                                         setResponses((prevResponses: any) =>
                                           prevResponses.map((r: any) => {
-                                            if (r.id === comment.id) {
+                                            if (r.id === response.id) {
                                               return {
                                                 ...r,
                                                 showImage: false,

@@ -19,7 +19,7 @@ export default function PostDetailsPage({
   const [post, setPost] = useState<any>();
   const [comments, setComments] = useState<any>([]);
   const [commentInput, setCommentInput] = useState("");
-  const [imageCommentInput, setimageCommentInput] = useState("");
+  const [imageCommentInput, setimageCommentInput] = useState<File | null>(null);
   const [showCommentInput, setShowCommentInput] = useState(false);
 
   useEffect(() => {
@@ -50,15 +50,20 @@ export default function PostDetailsPage({
   const handleImageCommentInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setimageCommentInput(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setimageCommentInput("");
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const allowedFileTypes = [".png", ".jpg", ".gif"];
+      const fileType = file.name.substring(file.name.lastIndexOf("."));
+
+      if (allowedFileTypes.includes(fileType)) {
+        setimageCommentInput(file);
+
+        const reader = new FileReader();
+
+        reader.readAsDataURL(file);
+      } else {
+        setimageCommentInput(null);
+      }
     }
   };
 
@@ -83,7 +88,7 @@ export default function PostDetailsPage({
       // Atualize o estado dos comentários
       setComments([newComment, ...comments]);
       setCommentInput("");
-      setimageCommentInput("");
+      setimageCommentInput(null);
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }
@@ -154,13 +159,13 @@ export default function PostDetailsPage({
                         onChange={handleImageCommentInput}
                         className="p-1 mb-2 text-sm"
                       />
-                      {imageCommentInput && (
+                      {/* {imageCommentInput && (
                         <img
                           src={imageCommentInput}
                           alt="Selected Image"
                           className="max-w-full max-h-44 mb-2"
                         />
-                      )}
+                      )} */}
                       <button
                         onClick={handleCommentSubmit}
                         className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
