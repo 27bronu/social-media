@@ -1,10 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-interface CommentFormProps {
+type CommentFormProps = {
   postId: number;
-  onCommentAdded: (comment: Comment) => void;
-}
+  onCommentAdded: (
+    postId: number,
+    commentText: string,
+    commentImage?: string
+  ) => void;
+};
 
 interface Comment {
   postId: number;
@@ -39,13 +43,13 @@ const CommentForm: React.FC<CommentFormProps> = ({
         formData.append("image", commentImage);
       }
 
-      const response = await axios.post(
+      const response: AxiosResponse = await axios.post(
         `http://localhost:4000/api/comments/${postId}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Retrieve the token from localStorage
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -56,9 +60,9 @@ const CommentForm: React.FC<CommentFormProps> = ({
         commentImage: response.data.commentImage,
       };
 
-      onCommentAdded(newComment); // Pass the new comment to the parent component
+      onCommentAdded(postId, commentText, response.data.commentImage);
 
-      setCommentText(""); // Clear the input fields
+      setCommentText("");
       setCommentImage(null);
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -66,26 +70,66 @@ const CommentForm: React.FC<CommentFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleCommentSubmit} className='mb-4'>
-      <textarea
-        value={commentText}
-        onChange={handleTextChange}
-        placeholder='Write a comment...'
-        className='block w-full p-2 mb-2 border border-gray-300 rounded text-black'
-        rows={3}
-      />
-      <input
-        type='file'
-        accept='image/*'
-        onChange={handleImageChange}
-        className='mb-2'
-      />
-      <button
-        type='submit'
-        className='px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600'>
-        Add Comment
-      </button>
-    </form>
+    <div>
+      <form onSubmit={handleCommentSubmit} className='flex items-center mt-2'>
+        <textarea
+          value={commentText}
+          onChange={handleTextChange}
+          placeholder='Write a comment...'
+          className='flex-grow p-2 mr-2 text-gray-800 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500'
+          rows={1}
+        />
+        <label className='relative flex items-center justify-center w-8 h-8 text-gray-500 bg-gray-200 rounded-full cursor-pointer'>
+          <svg
+            className='w-5 h-5'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+            xmlns='http://www.w3.org/2000/svg'>
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M12 6v6m0 0v6m0-6h6m-6 0H6'
+            />
+          </svg>
+          <input
+            type='file'
+            accept='image/*'
+            onChange={handleImageChange}
+            className='sr-only'
+          />
+        </label>
+        {commentImage && (
+          <div className='flex items-center ml-2 space-x-1'>
+            <span className='text-sm text-gray-600'>{commentImage.name}</span>
+            <button
+              type='button'
+              className='w-4 h-4 text-red-500 hover:text-red-700 focus:outline-none'
+              onClick={() => setCommentImage(null)}>
+              <svg
+                className='w-full h-full'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+                xmlns='http://www.w3.org/2000/svg'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M6 18L18 6M6 6l12 12'
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+        <button
+          type='submit'
+          className='ml-2 px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'>
+          Add Comment
+        </button>
+      </form>
+    </div>
   );
 };
 

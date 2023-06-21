@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FaUserCircle } from "react-icons/fa";
-import { fetchPostsWithComments } from "@/services/apiService";
+import { fetchPostsWithComments, fetchUsersData } from "@/services/apiService";
 import CommentForm from "@/components/CommentForm";
+import CommentItem from "@/components/Comments";
+import { FaUserCircle } from "react-icons/fa";
 
 interface Post {
   id: number;
@@ -12,49 +12,93 @@ interface Post {
   post: string;
   media?: string;
   created_at: string;
-  likes: number;
-  dislikes: number;
   comments: Comment[];
+}
+
+interface Response {
+  id: number;
+  id_comment: number;
+  username: string;
+  name: string;
+  media: string;
+  text: string;
+  created_at: string;
 }
 
 interface Comment {
   id: number;
-  name: string;
-  username: string;
   id_post: number;
+  username: string;
+  name: string;
+  media: string;
   text: string;
-  media?: string;
   created_at: string;
-  likes: number;
-  dislikes: number;
-  profile_picture: string;
+  replies: Response[];
 }
 
 interface PostsProps {
   posts: Post[];
+  users: { [key: string]: string };
+  showMore: number[];
+
+  handleCommentAdded: (
+    postId: number,
+    commentText: string,
+    commentImage?: string
+  ) => void;
+  toggleShowMore: (postId: number) => void;
 }
 
-const handleCommentAdded = (
-  postId: number,
-  commentText: string,
-  commentImage?: string
-) => {
-  // Make the API call to add the comment to the post
-  // You can use the provided endpoint and implement the logic accordingly
-  console.log("Adding comment:", postId, commentText, commentImage);
+function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
+  };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+const PostImage: React.FC<{ media?: string }> = ({ media }) => {
+  if (!media) {
+    return (
+      <p className='antialiased text-lg font-bold text-red-500 pb-2'>
+        No image available for this post.
+      </p>
+    );
+  }
+
+  return (
+    <img
+      src={media}
+      alt='Post Image'
+      className='mb-4 h-full w-full object-cover rounded-lg drop-shadow-xl'
+    />
+  );
 };
 
-const Posts: React.FC<PostsProps> = ({ posts }) => {
+const Posts: React.FC<PostsProps> = ({
+  posts,
+  users,
+  handleCommentAdded,
+  showMore,
+  toggleShowMore,
+}) => {
   return (
     <div className='text-white h-auto px-8 py-4 rounded-lg'>
-      {posts.map((post) => (
+      <h1 className='text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
+        Feed
+      </h1>
+      {posts.map((post, index) => (
         <div
           key={post.id}
           className='bg-gray-700 rounded-lg shadow-md p-4 mb-8'>
           <div className='flex items-center mb-4'>
-            {post.profile_picture ? (
+            {post.username in users ? (
               <img
-                src={post.profile_picture}
+                src={users[post.username]}
                 alt='Profile Picture'
                 className='w-16 h-16 rounded-full mr-2 drop-shadow-xl'
               />
@@ -64,146 +108,83 @@ const Posts: React.FC<PostsProps> = ({ posts }) => {
             <div>
               <h2 className='text-lg font-bold -mb-1'>{post.name}</h2>
               <h3 className='text-lg text-gray-300'>@{post.username}</h3>
-              <p>{post.id}</p>
             </div>
           </div>
           <p className='mb-4'>{post.post}</p>
-          {post.media ? (
-            <img
-              src={post.media}
-              alt='Post Image'
-              className='mb-4 h-full w-full object-cover rounded-lg drop-shadow-xl'
-            />
-          ) : (
-            <p className='antialiased text-lg font-bold text-red-500 pb-2'>
-              No image available for this post.
-            </p>
-          )}
-          <p className='text-sm mb-2'>
-            {new Date(post.created_at).toLocaleString("pt-PT", {
-              year: "2-digit",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
-          <div className='flex items-center mb-2'>{/* Rest of the code */}</div>
+          <PostImage media={post.media} />
+          <p className='text-sm mb-2'>{formatDate(post.created_at)}</p>
           <div>
             {post.comments && post.comments.length ? (
               <div className='mt-4 space-y-4'>
-                <h4 className='text-md font-bold mb-4'>Comments:</h4>
-                {post.comments.map((comment) => (
-                  <div key={comment.id} className='flex items-start space-x-4'>
-                    <div className='relative'>
-                      {comment.profile_picture ? (
-                        <img
-                          src={comment.profile_picture}
-                          alt='Profile Picture'
-                          className='w-12 h-12 rounded-full'
-                        />
-                      ) : (
-                        <FaUserCircle className='w-12 h-12 text-gray-400' />
-                      )}
-                    </div>
-                    <div className='flex flex-col'>
-                      <div className='flex items-center'>
-                        <p className='text-sm font-bold'>
-                          @{comment.username}:
-                        </p>
-                        <p className='text-sm ml-2'>{comment.text}</p>
-                      </div>
-                      <div className='mt-1 text-gray-400 text-xs'>
-                        {new Date(comment.created_at).toLocaleString("pt-PT", {
-                          year: "2-digit",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </div>
-                      {comment.media && (
-                        <div className='mt-2'>
-                          <img
-                            src={comment.media}
-                            alt='Comment Image'
-                            className='w-48 h-48 object-cover rounded-lg drop-shadow-xl'
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                {post.comments
+                  .slice(0, showMore.includes(post.id) ? undefined : 3) // Show only first 3 comments if not expanded
+                  .map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      users={users}
+                    />
+                  ))}
+                {post.comments.length > 3 && (
+                  <button
+                    onClick={() => toggleShowMore(post.id)}
+                    className='text-gray-200 mt-2 focus:outline-none'>
+                    {showMore.includes(post.id)
+                      ? "Show Less Comments"
+                      : "Show More Comments"}
+                  </button>
+                )}
               </div>
             ) : (
-              <p className='mb-4 antialiased text-lg font-bold text-red-500'>
-                No comments available.
-              </p>
+              <p>No comments for this post.</p>
             )}
           </div>
-          <div className='mt-3'>
-            <CommentForm
-              postId={post.id}
-              onCommentAdded={(
-                postId: number,
-                commentText: string,
-                commentImage: string | undefined
-              ) => handleCommentAdded(postId, commentText, commentImage)}
-            />
-          </div>
+          <CommentForm postId={post.id} onCommentAdded={handleCommentAdded} />
         </div>
       ))}
     </div>
   );
 };
 
-const Feed: React.FC = () => {
+interface HomeProps {}
+
+const Home: React.FC<HomeProps> = ({}) => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [users, setUsers] = useState<{ [key: string]: string }>({});
+  const [showMore, setShowMore] = useState<number[]>([]);
 
   useEffect(() => {
-    fetchPostsData();
+    fetchPostsWithComments().then((data) => setPosts(data));
+    fetchUsersData().then((data) => setUsers(data));
   }, []);
 
-  const fetchPostsData = async () => {
-    try {
-      const postsData = await fetchPostsWithComments();
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:4000/api/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const usersData = response.data;
-      const usersMap = new Map(
-        usersData.profiles.map((profile: any) => [
-          profile.username,
-          profile.media,
-        ])
-      );
+  const handleCommentAdded = (
+    postId: number,
+    commentText: string,
+    commentImage?: string
+  ) => {
+    // Logic to add comment
+  };
 
-      const updatedPosts = postsData.map((post) => ({
-        ...post,
-        profile_picture: usersMap.get(post.username) || post.profile_picture,
-      }));
-
-      setPosts(updatedPosts);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
+  const toggleShowMore = (postId: number) => {
+    if (showMore.includes(postId)) {
+      setShowMore(showMore.filter((id) => id !== postId));
+    } else {
+      setShowMore([...showMore, postId]);
     }
   };
 
   return (
-    <div className='bg-gray-900 text-white min-h-screen'>
-      <div className='container mx-auto px-4 py-8 max-w-screen-lg'>
-        <h1 className='text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
-          Feed
-        </h1>
-        {loading ? <p>Loading...</p> : <Posts posts={posts} />}
-      </div>
+    <div className='container mx-auto mt-8'>
+      <Posts
+        posts={posts}
+        users={users}
+        showMore={showMore}
+        handleCommentAdded={handleCommentAdded}
+        toggleShowMore={toggleShowMore}
+      />
     </div>
   );
 };
 
-export default Feed;
+export default Home;

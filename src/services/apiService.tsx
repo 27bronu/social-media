@@ -1,30 +1,17 @@
-import axios from "axios";
-
-const API_BASE_URL = "http://localhost:4000/api";
+import axiosInstance from "@/services/apiConfig";
 
 // Fetch posts with comments
 export async function fetchPostsWithComments() {
   try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_BASE_URL}/posts`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.get("/posts");
 
     const postsData = response.data.posts;
 
     const postsWithComments = await Promise.all(
       postsData.map(async (post: any) => {
-        const commentsResponse = await axios.get(
-          `${API_BASE_URL}/commentspost/${post.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const commentsResponse = await axiosInstance.get(
+          `/commentspost/${post.id}`
         );
-
         const commentsData = commentsResponse.data.comments;
         return { ...post, comments: commentsData };
       })
@@ -37,63 +24,12 @@ export async function fetchPostsWithComments() {
   }
 }
 
-// Fetch comments for a post
-export async function fetchComments(
-  postId: number,
-  token: string | null
-): Promise<Comment[]> {
+export async function fetchUsersData() {
   try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_BASE_URL}/commentspost/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data.comments;
+    const response = await axiosInstance.get("/users");
+    return response.data.profiles;
   } catch (error) {
-    console.error("Error fetching comments:", error);
-    throw error;
-  }
-}
-
-// Add a comment to a post
-
-export const addComment = async (
-  postId: number,
-  comment: string
-): Promise<Comment> => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(
-      `http://localhost:4000/api/comments/${postId}`,
-      { comment },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to add comment");
-  }
-};
-
-// fetch comments for post
-
-export async function fetchCommentsForPost(postId: any) {
-  try {
-    const response = await axios.get(
-      `http://localhost:4000/api/commentspost/${postId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    return response.data.comments;
-  } catch (error) {
-    console.error("Error fetching comments:", error);
+    console.error("Error fetching users:", error);
     throw error;
   }
 }

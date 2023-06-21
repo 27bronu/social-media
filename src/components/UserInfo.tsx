@@ -1,8 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { FaUsers, FaUserFriends, FaFileAlt } from "react-icons/fa";
+import { FaImage, FaUsers, FaUserPlus } from "react-icons/fa";
 
 interface UserProfile {
   id: number;
@@ -18,8 +16,8 @@ interface UserProfile {
 export default function UserInfo() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const infoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,35 +30,43 @@ export default function UserInfo() {
       .then((response) => {
         const { profile } = response.data;
         setUser(profile);
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         setError(true);
-        setLoading(false);
       });
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   const handleClick = () => {
     setShowInfo(!showInfo);
   };
 
-  if (loading) {
-    // Add loading state
-    return <div>Loading...</div>;
-  }
+  const handleClickOutside = (event: MouseEvent) => {
+    if (infoRef.current && !infoRef.current.contains(event.target as Node)) {
+      setShowInfo(false);
+    }
+  };
 
   if (error) {
-    // Add error state
-    return <div>An error occurred while retrieving user data.</div>;
+    return (
+      <div className='font-bold text-red-600'>
+        An error occurred while retrieving user data.
+      </div>
+    );
   }
 
   return (
-    <div className='flex items-center justify-center'>
-      <div className='relative'>
+    <div className='bg-gray-600 rounded-full flex items-center justify-center pr-4'>
+      <div className='relative' ref={infoRef}>
         {user && (
           <div
-            className='cursor-pointer flex items-center'
+            className='cursor-pointer flex items-center ml-2 mt-1 mb-1'
             onClick={handleClick}>
             {!user.media ? (
               <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
@@ -77,7 +83,7 @@ export default function UserInfo() {
           </div>
         )}
         {showInfo && (
-          <div className='absolute right-0 mt-2 p-4 bg-gray-700 text-white shadow-md rounded-md min-w-max'>
+          <div className='absolute right-0 mt-2 p-4 bg-gray-600 text-white shadow-md rounded-md min-w-max'>
             <div className='flex items-center mb-4'>
               {!user?.media ? (
                 <div className='w-10 h-10 bg-gray-200 rounded-full mr-2'></div>
@@ -85,7 +91,7 @@ export default function UserInfo() {
                 <img
                   src={user.media}
                   alt='User Profile Picture'
-                  className='w-10 h-10 rounded-full mr-2'
+                  className='w-12 h-12 mr-2 rounded-full'
                 />
               )}
               <div>
@@ -98,11 +104,11 @@ export default function UserInfo() {
               <span>Followers: {user?.followers}</span>
             </p>
             <p className='flex items-center'>
-              <FaUserFriends className='mr-2' />
+              <FaUserPlus className='mr-2' />
               <span>Following: {user?.following}</span>
             </p>
             <p className='flex items-center'>
-              <FaFileAlt className='mr-2' />
+              <FaImage className='mr-2' />
               <span>Posts: {user?.posts}</span>
             </p>
           </div>
