@@ -2,6 +2,8 @@
 import React from "react";
 import { useState } from "react";
 import { CreateResponse } from "@/services/create-response";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function CreateResponseForm({
   commentId,
@@ -35,8 +37,9 @@ export default function CreateResponseForm({
   };
 
   const handleResponseSubmit = async () => {
-    if (responseInput.length <= 0) {
-      console.log("Response lenght 0");
+    if (!responseInput && !imageResponseInput) {
+      toast.error("Neither the response text nor the image was loaded");
+      return;
     }
     try {
       // Verifique se os valores de commentInput e imageCommentInput estão corretos
@@ -60,6 +63,7 @@ export default function CreateResponseForm({
       setResponses([...responses, newResponse]);
       setResponseInput("");
       setimageResponseInput("");
+      toast.success("Response created successfully!");
     } catch (error) {
       console.log("Erro ao criar o resposta:", error);
     }
@@ -90,13 +94,13 @@ export default function CreateResponseForm({
               type="file"
               accept="image/*"
               onChange={handleImageResponseInput}
-              className="p-1 mb-2 text-xs"
+              className="p-1 mb-2 text-xs text-white"
             />
             {imageResponseInput && (
               <img
                 src={imageResponseInput}
                 alt="Selected Image"
-                className="max-w-full max-h-44 mb-2"
+                className="max-w-full max-h-44 mb-2 "
               />
             )}
             <button
@@ -108,6 +112,7 @@ export default function CreateResponseForm({
           </div>
         )}
       </div>
+      <ToastContainer />
     </>
   );
 }

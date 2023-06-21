@@ -72,11 +72,11 @@ export default function CommentDetailsPage({
   };
 
   const handleResponseSubmit = async () => {
-    if (responseInput.length <= 0 || !imageResponseInput) {
-      toast.error("Neither the response text nor the image was loaded");
-      return;
-    }
     try {
+      if (!responseInput && !imageResponseInput) {
+        toast.error("Neither the response text nor the image was loaded");
+        return;
+      }
       // Verifique se os valores de ResponseInput e imageResponseInput estão corretos
       const newResponse = {
         id: responses.length + 1,
@@ -98,6 +98,7 @@ export default function CommentDetailsPage({
       setResponses([newResponse, ...responses]);
       setResponseInput("");
       setimageResponseInput(null);
+      toast.success("Response created successfully!");
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }

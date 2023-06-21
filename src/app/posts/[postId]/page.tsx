@@ -70,7 +70,7 @@ export default function PostDetailsPage({
   };
 
   const handleCommentSubmit = async () => {
-    if (commentInput.length <= 0 || !imageCommentInput) {
+    if (!commentInput && !imageCommentInput) {
       toast.error("Neither the comment text nor the image was loaded");
       return;
     }
@@ -92,6 +92,7 @@ export default function PostDetailsPage({
       setComments([newComment, ...comments]);
       setCommentInput("");
       setimageCommentInput(null);
+      toast.success("Comment created successfully!");
     } catch (error) {
       console.log("Erro ao criar o comentário:", error);
     }
