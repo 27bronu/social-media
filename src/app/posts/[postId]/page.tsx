@@ -70,7 +70,7 @@ export default function PostDetailsPage({
       }
     }
   };
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCommentSubmit = async () => {
     if (!commentInput && !imageCommentInput) {
@@ -99,7 +99,7 @@ export default function PostDetailsPage({
           .then((fetchedComments) => {
             setComments(fetchedComments);
             if (inputRef.current) {
-              inputRef.current.value = null;
+              inputRef.current.value = "";
             }
           })
           .catch(() => console.log("erro comments"));

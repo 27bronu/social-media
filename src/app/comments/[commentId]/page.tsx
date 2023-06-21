@@ -70,7 +70,7 @@ export default function CommentDetailsPage({
       }
     }
   };
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleResponseSubmit = async () => {
     try {
@@ -98,7 +98,7 @@ export default function CommentDetailsPage({
           .then((fetchedResponses) => {
             setResponses(fetchedResponses);
             if (inputRef.current) {
-              inputRef.current.value = null;
+              inputRef.current.value = "";
             }
           })
           .catch(() => console.log("erro comments"));
