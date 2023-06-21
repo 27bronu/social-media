@@ -110,7 +110,7 @@ export default function LikeDislikeComment({
 
   return (
     <>
-      <div className="text-left justify-left flex flex-wrap my-1">
+      <div className="text-left justify-left flex flex-wrap my-1 text-white">
         <button onClick={() => handleLikeComment(idComment)}>
           {likedComment.includes(idComment) ? (
             <AiFillLike />

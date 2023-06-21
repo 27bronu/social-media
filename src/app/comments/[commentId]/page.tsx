@@ -6,7 +6,8 @@ import { getResponsesByCommentId } from "@/services/get-responses-by-commentid";
 
 import { CreateResponse } from "@/services/create-response";
 import { getProfile } from "@/services/profile";
-import CreateResponseForm from "@/components/CreateResponse";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
 import LikeDislikeResponse from "@/components/LikeDislikeResponse";
@@ -54,26 +55,26 @@ export default function CommentDetailsPage({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (event.target.files && event.target.files.length > 0) {
-        const file = event.target.files[0];
-        const allowedFileTypes = [".png", ".jpg", ".gif"];
-        const fileType = file.name.substring(file.name.lastIndexOf("."));
-    
-        if (allowedFileTypes.includes(fileType)) {
-          setimageResponseInput(file);
-    
-          const reader = new FileReader();
-          
-          reader.readAsDataURL(file);
-        } else {
-          setimageResponseInput(null);
+      const file = event.target.files[0];
+      const allowedFileTypes = [".png", ".jpg", ".gif"];
+      const fileType = file.name.substring(file.name.lastIndexOf("."));
 
-        }
+      if (allowedFileTypes.includes(fileType)) {
+        setimageResponseInput(file);
+
+        const reader = new FileReader();
+
+        reader.readAsDataURL(file);
+      } else {
+        setimageResponseInput(null);
       }
+    }
   };
 
   const handleResponseSubmit = async () => {
-    if (responseInput.length <= 0) {
-      console.log("Response lenght 0");
+    if (responseInput.length <= 0 || !imageResponseInput) {
+      toast.error("Neither the response text nor the image was loaded");
+      return;
     }
     try {
       // Verifique se os valores de ResponseInput e imageResponseInput estão corretos
@@ -121,7 +122,7 @@ export default function CommentDetailsPage({
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
                 <ul className="flex flex-col items-center text-center justify-center text-center mx-2">
-                  <h2 className="font-bold text-left justify-left mb-1">
+                  <h2 className="font-bold text-left justify-left mb-1 text-white">
                     @{comment.username}
                   </h2>
                   {comment.media ? (
@@ -144,7 +145,7 @@ export default function CommentDetailsPage({
                     idComment={comment.id}
                   ></LikeDislikeComment>
                 </div>
-                <p className="text-center justify-center text-xs">
+                <p className="text-center justify-center text-xs text-white">
                   Created at: {formattedDatePost}
                 </p>
                 <hr />
@@ -163,13 +164,14 @@ export default function CommentDetailsPage({
                         placeholder="Response"
                         value={responseInput}
                         onChange={handleResponseInput}
-                        className="text-black border border-gray-300 rounded-lg mr-1 p-1  text-sm"
+                        className="text-black border border-gray-300 rounded-lg mr-1 p-1 mb-2 text-sm"
                       />
                       <input
                         type="file"
                         id="imageResponse"
                         accept="image/*"
                         onChange={handleImageResponseInput}
+                        className="p-1 mb-2 text-sm text-white"
                       />
                       {/* {imageResponseInput && (
                         <img
@@ -180,7 +182,7 @@ export default function CommentDetailsPage({
                       )} */}
                       <button
                         onClick={handleResponseSubmit}
-                        className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
+                        className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm text-white"
                       >
                         Add Response
                       </button>
@@ -196,15 +198,15 @@ export default function CommentDetailsPage({
                       >
                         <div className="flex flex-col">
                           <div className="flex flex-wrap">
-                            <span className="font-bold text-sm">
+                            <span className="font-bold text-sm text-white">
                               @{response.username}:
                             </span>
-                            <span className="ml-1 text-sm">
+                            <span className="ml-1 text-sm text-white">
                               {response.text}
                             </span>
                           </div>
                           <div className="align-left text-left justify-left">
-                          {response.media && (
+                            {response.media && (
                               <>
                                 {response.showImage ? (
                                   <>
@@ -260,7 +262,7 @@ export default function CommentDetailsPage({
                               idResponse={response.id}
                             ></LikeDislikeResponse>
 
-                            <p className="text-left justify-left text-xs">
+                            <p className="text-left justify-left text-xs text-white">
                               Created at:{" "}
                               {new Date(response.created_at).toLocaleDateString(
                                 "en-GB"
@@ -274,6 +276,7 @@ export default function CommentDetailsPage({
                 </div>
               </div>
             </ul>
+            <ToastContainer />
           </>
         ) : (
           <div

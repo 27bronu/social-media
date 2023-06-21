@@ -7,7 +7,10 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { CreateLikeResponse, RemoveLikeResponse } from "@/services/like-response";
+import {
+  CreateLikeResponse,
+  RemoveLikeResponse,
+} from "@/services/like-response";
 import {
   CreateDislikeResponse,
   RemoveDislikeResponse,
@@ -110,7 +113,7 @@ export default function LikeDislikeResponse({
 
   return (
     <>
-      <div className="text-left justify-left flex flex-wrap my-1">
+      <div className="text-left justify-left flex flex-wrap my-1 text-white">
         <button onClick={() => handleLikeResponse(idResponse)}>
           {likedResponse.includes(idResponse) ? (
             <AiFillLike />

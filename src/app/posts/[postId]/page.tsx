@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getPostsById } from "@/services/get-post-by-id";
 import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
 import { CreateComment } from "@/services/create-comment";
@@ -68,8 +70,9 @@ export default function PostDetailsPage({
   };
 
   const handleCommentSubmit = async () => {
-    if (commentInput.length <= 0) {
-      console.log("Comment lenght 0");
+    if (commentInput.length <= 0 || !imageCommentInput) {
+      toast.error("Neither the comment text nor the image was loaded");
+      return;
     }
     try {
       // Verifique se os valores de commentInput e imageCommentInput estão corretos
@@ -112,7 +115,7 @@ export default function PostDetailsPage({
                 id="commentspost"
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
-                <ul className="flex flex-col items-center text-center justify-center mx-2">
+                <ul className="flex flex-col items-center text-center justify-center mx-2 ">
                   {post.media ? (
                     <>
                       <h2 className="font-bold text-left justify-left mb-1">
@@ -132,7 +135,7 @@ export default function PostDetailsPage({
                   {post.post}
                 </p>
                 <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                <p className="text-center justify-center text-xs">
+                <p className="text-center justify-center text-xs text-white">
                   Created at: {formattedDatePost}
                 </p>
                 <hr />
@@ -157,7 +160,7 @@ export default function PostDetailsPage({
                         type="file"
                         accept="image/*"
                         onChange={handleImageCommentInput}
-                        className="p-1 mb-2 text-sm"
+                        className="p-1 mb-2 text-sm text-white"
                       />
                       {/* {imageCommentInput && (
                         <img
@@ -184,10 +187,12 @@ export default function PostDetailsPage({
                       >
                         <div className="flex flex-col">
                           <div className="flex flex-wrap">
-                            <span className="font-bold text-sm">
+                            <span className="font-bold text-sm text-white">
                               @{comment.username}:
                             </span>
-                            <span className="ml-1 text-sm">{comment.text}</span>
+                            <span className="ml-1 text-sm text-white">
+                              {comment.text}
+                            </span>
                           </div>
                           <div className="align-left text-left justify-left">
                             {comment.media && (
@@ -246,7 +251,7 @@ export default function PostDetailsPage({
                               idComment={comment.id}
                             ></LikeDislikeComment>
 
-                            <p className="text-left justify-left text-xs">
+                            <p className="text-left justify-left text-xs text-white">
                               Created at:{" "}
                               {new Date(comment.created_at).toLocaleDateString(
                                 "en-GB"
@@ -269,6 +274,7 @@ export default function PostDetailsPage({
                 </div>
               </div>
             </ul>
+            <ToastContainer />
           </>
         ) : (
           <div
