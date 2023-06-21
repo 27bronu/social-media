@@ -15,7 +15,13 @@ const DeleteAccount = () => {
   const router = useRouter();
   const token = localStorage.getItem("token");
 
+
+
   useEffect(() => {
+    if (!token) {
+      router.push('/login'); 
+      return;
+    }
     axios
       .get("http://192.168.0.72:4000/api/auth/profile/", {
         headers: {
@@ -29,7 +35,10 @@ const DeleteAccount = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [token, router]);
+  if (!token) {
+    return null; 
+  }
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
