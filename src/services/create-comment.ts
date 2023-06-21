@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function CreateComment(postId: number, text: any, image: any | null) {
+export async function CreateComment(postId: number, text = "", image: File | null) {
   const token = localStorage.getItem("token");
 
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCommentById } from "@/services/get-comment-by-id";
 import { getResponsesByCommentId } from "@/services/get-responses-by-commentid";
 
@@ -70,6 +70,7 @@ export default function CommentDetailsPage({
       }
     }
   };
+  const inputRef = useRef(null);
 
   const handleResponseSubmit = async () => {
     try {
@@ -92,7 +93,16 @@ export default function CommentDetailsPage({
         newResponse.commentId,
         newResponse.text,
         newResponse.image
-      );
+      ).then(() => {
+        getResponsesByCommentId(params.commentId)
+          .then((fetchedResponses) => {
+            setResponses(fetchedResponses);
+            if (inputRef.current) {
+              inputRef.current.value = null;
+            }
+          })
+          .catch(() => console.log("erro comments"));
+      });
 
       // Atualize o estado dos comentários
       setResponses([newResponse, ...responses]);
@@ -168,6 +178,7 @@ export default function CommentDetailsPage({
                         className="text-black border border-gray-300 rounded-lg mr-1 p-1 mb-2 text-sm"
                       />
                       <input
+                        ref={inputRef}
                         type="file"
                         id="imageResponse"
                         accept="image/*"

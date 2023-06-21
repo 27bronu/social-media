@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getPostsById } from "@/services/get-post-by-id";
@@ -11,6 +11,7 @@ import CreateResponseForm from "@/components/CreateResponse";
 import Link from "next/link";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
+import { comment } from "postcss";
 
 export default function PostDetailsPage({
   params,
@@ -57,6 +58,7 @@ export default function PostDetailsPage({
       const allowedFileTypes = [".png", ".jpg", ".gif"];
       const fileType = file.name.substring(file.name.lastIndexOf("."));
 
+      console.log(allowedFileTypes);
       if (allowedFileTypes.includes(fileType)) {
         setimageCommentInput(file);
 
@@ -68,12 +70,14 @@ export default function PostDetailsPage({
       }
     }
   };
+  const inputRef = useRef(null);
 
   const handleCommentSubmit = async () => {
     if (!commentInput && !imageCommentInput) {
       toast.error("Neither the comment text nor the image was loaded");
       return;
     }
+
     try {
       // Verifique se os valores de commentInput e imageCommentInput estão corretos
       const newComment = {
@@ -86,10 +90,22 @@ export default function PostDetailsPage({
       };
 
       // Chame a função de serviço CreateComment com os argumentos corretos
-      await CreateComment(newComment.postId, newComment.text, newComment.image);
+      await CreateComment(
+        newComment.postId,
+        newComment.text,
+        newComment.image
+      ).then(() => {
+        getCommentsByPostId(params.postId)
+          .then((fetchedComments) => {
+            setComments(fetchedComments);
+            if (inputRef.current) {
+              inputRef.current.value = null;
+            }
+          })
+          .catch(() => console.log("erro comments"));
+      });
 
       // Atualize o estado dos comentários
-      setComments([newComment, ...comments]);
       setCommentInput("");
       setimageCommentInput(null);
       toast.success("Comment created successfully!");
@@ -119,7 +135,7 @@ export default function PostDetailsPage({
                 <ul className="flex flex-col items-center text-center justify-center mx-2 ">
                   {post.media ? (
                     <>
-                      <h2 className="font-bold text-left justify-left mb-1">
+                      <h2 className="font-bold text-left text-white justify-left mb-1">
                         @{post.username}
                       </h2>
                       <img
@@ -158,6 +174,7 @@ export default function PostDetailsPage({
                         className="text-black border border-gray-300 rounded-lg mr-1 p-1 mb-2 text-sm"
                       />
                       <input
+                        ref={inputRef}
                         type="file"
                         accept="image/*"
                         onChange={handleImageCommentInput}
@@ -171,6 +188,7 @@ export default function PostDetailsPage({
                         />
                       )} */}
                       <button
+                        //handleCommentSubmit
                         onClick={handleCommentSubmit}
                         className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
                       >
@@ -259,10 +277,6 @@ export default function PostDetailsPage({
                               )}
                             </p>
                           </div>
-                          <CreateResponseForm
-                            commentId={comment.id}
-                            username={user.username}
-                          />
                         </div>
                       </li>
                       <div className="text-center font-bold justify-center bg-gray-500 text-white px-2 py-1 rounded-lg text-xs">

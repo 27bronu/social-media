@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function CreateResponse(commentId: number, text: any, image: any | null) {
+export async function CreateResponse(commentId: number, text = "", image: File | null) {
   const token = localStorage.getItem("token");
 
 

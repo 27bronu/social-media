@@ -7,7 +7,6 @@ import { FollowUser, UnfollowUser } from "@/services/follow-unfollow-user";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import Link from "next/link";
 
-
 export default function UserDetailsPage({
   params,
 }: {
@@ -101,21 +100,19 @@ export default function UserDetailsPage({
                 src="http://localhost:4000/uploads/fad5fde00a33054fc8216534e1c762bc.jpg"
                 alt="Default image"
               />
-              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+              <h5 className="mb-1 text-xl font-medium text-gray-900 text-black">
                 @{user.username}
               </h5>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {user.name}
-              </span>
+              <span className="text-sm text-gray-500">{user.name}</span>
               <br />
               <div className="flex flex-wrap">
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-500  p-2">
                   Posts: {user.posts}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-500  p-2">
                   Followers: {user.followers}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-500  p-2">
                   Following: {user.following}
                 </span>
               </div>
@@ -137,9 +134,7 @@ export default function UserDetailsPage({
                 )}
               </div>
             </div>
-            <span className="flex text-center justify-center">
-              Posts
-            </span>
+            <span className="flex text-center justify-center">Posts</span>
             <ul className="flex flex-col items-center justify-center text-center mt-3">
               {posts.map((post: any) => (
                 <div key={post.id} className="flex flex-col items-center pb-5">
@@ -155,11 +150,13 @@ export default function UserDetailsPage({
                             src={post.media}
                             alt="Default image"
                           />
-                          <p className="text-sm break-words m-2">{post.post}</p>
+                          <p className="text-sm break-words text-white m-2">
+                            {post.post}
+                          </p>
                           <hr />
                         </Link>
                         <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                        <p className="text-center justify-center text-xs">
+                        <p className="text-center justify-center text-white text-xs">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(
                             "en-GB"
@@ -174,11 +171,13 @@ export default function UserDetailsPage({
                         className="m-2.5 w-96 pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
                       >
                         <Link href={`/posts/${post.id}`}>
-                          <p className="text-sm break-words m-2">{post.post}</p>
+                          <p className="text-sm break-words text-white m-2">
+                            {post.post}
+                          </p>
                           <hr />
                         </Link>
                         <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                        <p className="text-center justify-center text-xs">
+                        <p className="text-center justify-center text-xs text-white">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(
                             "en-GB"
