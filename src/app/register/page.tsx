@@ -18,7 +18,6 @@ export default function Registar() {
   const [showPopUp, setShowPopUp] = useState(false);
   const router = useRouter();
 
-
   function showPopUpMessage(message: string) {
     setPopUpMessage(message);
     setShowPopUp(true);
@@ -39,14 +38,14 @@ export default function Registar() {
       name: name,
       password: password,
     };
-  
+
     axios
-      .post("http://192.168.0.72:4000/api/auth/register", user)
+      .post("http://localhost:4000/api/auth/register", user)
       .then((res) => {
         showPopUpMessage(res.data?.message);
         setTimeout(() => {
           router.push("./login");
-        }, 3000); 
+        }, 3000);
       })
       .catch((error) => {
         if (error.response) {
@@ -59,78 +58,78 @@ export default function Registar() {
 
   return (
     <main>
-    {showPopUp && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-        <div className="bg-white p-8 rounded-lg">
-          <h2 className="text-2xl font-bold text-green-900 mb-4">ALERT</h2>
-          <p className="text-lg">{popUpMessage}</p>
-          <div className="flex justify-center mt-8">
-            <button className="bg-green-900 hover:bg-green-900 text-white font-bold py-2 px-6 rounded" onClick={closePopUp}>
-              Close
-            </button>
+      {showPopUp && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'>
+          <div className='bg-white p-8 rounded-lg'>
+            <h2 className='text-2xl font-bold text-green-900 mb-4'>ALERT</h2>
+            <p className='text-lg'>{popUpMessage}</p>
+            <div className='flex justify-center mt-8'>
+              <button
+                className='bg-green-900 hover:bg-green-900 text-white font-bold py-2 px-6 rounded'
+                onClick={closePopUp}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-      <div className="flex flex-col justify-center items-center h-screen">
-        <div className="box-border h-4/5 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center mb-4">
-          <Image src="/logosocial.png" width={200} height={100} alt="" />
-          <label className="mt-4 text-sm">Email</label>
+      <div className='flex flex-col justify-center items-center h-screen'>
+        <div className='box-border h-4/5 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center mb-4'>
+          <Image src='/logosocial.png' width={200} height={100} alt='' />
+          <label className='mt-4 text-sm'>Email</label>
           <input
-            type="email"
-            id="email"
+            type='email'
+            id='email'
             onChange={(e) => setEmail(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
+            className='mt-2 p-2 border-2 border-green-900'
           />
-          <label className="mt-4 text-sm">Username</label>
+          <label className='mt-4 text-sm'>Username</label>
           <input
-            type="text"
-            id="username"
+            type='text'
+            id='username'
             onChange={(e) => setUsername(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
+            className='mt-2 p-2 border-2 border-green-900'
           />
-          <label className="mt-4 text-sm">Name</label>
+          <label className='mt-4 text-sm'>Name</label>
           <input
-            type="text"
-            id="name"
+            type='text'
+            id='name'
             onChange={(e) => setName(e.currentTarget.value)}
-            className="mt-2 p-2 border-2 border-green-900"
+            className='mt-2 p-2 border-2 border-green-900'
           />
-          <label className="mt-4 text-sm">Password</label>
-          <div className="relative flex items-center">
+          <label className='mt-4 text-sm'>Password</label>
+          <div className='relative flex items-center'>
             <input
               type={showPassword ? "text" : "password"}
-              id="password"
+              id='password'
               onChange={(e) => setPassword(e.currentTarget.value)}
-              className="mt-2 p-2 border-2 border-green-900"
+              className='mt-2 p-2 border-2 border-green-900'
             />
             <span
-              className="absolute right-2 text-lg cursor-pointer top-7 transform -translate-y-1/2"
+              className='absolute right-2 text-lg cursor-pointer top-7 transform -translate-y-1/2'
               style={{
                 margin: "0 0.5rem",
               }}
-              onClick={togglePasswordVisibility}
-            >
+              onClick={togglePasswordVisibility}>
               {showPassword ? (
-                <BsEyeSlash className="text-lg" />
+                <BsEyeSlash className='text-lg' />
               ) : (
-                <BsEye className="text-lg" />
+                <BsEye className='text-lg' />
               )}
             </span>
           </div>
           <button
             onClick={addUser}
-            className="mt-5 bg-green-900 hover:bg-green-600 text-white font-bold py-2 px-6 rounded"
-          >
+            className='mt-5 bg-green-900 hover:bg-green-600 text-white font-bold py-2 px-6 rounded'>
             Continue
           </button>
         </div>
-        <div className="box-border h-20 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center">
-          <h1 className="mt-4" style={{ fontSize: "14px" }}>
+        <div className='box-border h-20 mt-1 w-72 p-4 border-1 border-green-900 shadow-2xl flex flex-col justify-start items-center'>
+          <h1 className='mt-4' style={{ fontSize: "14px" }}>
             <div>
-             Already have an account? ‎
-              <Link className="underline text-green-900 " href="/login">
+              Already have an account? ‎
+              <Link className='underline text-green-900 ' href='/login'>
                 Log in.
               </Link>
             </div>
