@@ -23,7 +23,7 @@ const Login = () => {
     };
 
     axios
-      .post("http://192.168.0.72:4000/api/auth/login", user)
+      .post("http://localhost:4000/api/auth/login", user)
       .then((res) => {
         const token = res.data?.token;
         if (token) {
@@ -34,10 +34,11 @@ const Login = () => {
       })
       .catch((err) => {
         if (err.response) {
-          showPopUpMessage(err.response.data.error);
+          setPopUpMessage(err.response.data.error);
         } else {
-          showPopUpMessage(err.message);
+          setPopUpMessage(err.message);
         }
+        setShowPopUp(true);
       });
   };
 

@@ -67,7 +67,7 @@ export default function Register() {
     };
 
     axios
-      .post("http://192.168.0.72:4000/api/auth/register", user)
+      .post("http://localhost:4000/api/auth/register", user)
       .then((res) => {
         showPopUpMessage(res.data?.message);
         setTimeout(() => {

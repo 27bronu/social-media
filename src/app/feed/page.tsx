@@ -1,12 +1,17 @@
+"use client";
 import React from "react";
-import Posts from "@/components/Posts";
+import Navbar from "@/components/Navbar";
+import Feed from "@/components/Feed";
+import Footer from "@/components/Footer";
 
-function Feed() {
+function FeedPage() {
   return (
-    <div>
-      <Posts />
+    <div className='bg-gray-950'>
+      <Navbar />
+      <Feed />
+      <Footer />
     </div>
   );
 }
 
-export default Feed;
+export default FeedPage;
