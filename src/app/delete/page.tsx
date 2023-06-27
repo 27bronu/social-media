@@ -15,15 +15,13 @@ const DeleteAccount = () => {
   const router = useRouter();
   const token = localStorage.getItem("token");
 
-
-
   useEffect(() => {
     if (!token) {
       router.push('/login'); 
       return;
     }
     axios
-      .get("http://192.168.0.72:4000/api/auth/profile/", {
+      .get("http://192.168.0.43:4000/api/auth/profile/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +95,7 @@ const DeleteAccount = () => {
     };
 
     axios
-      .delete("http://192.168.0.72:4000/api/auth/deleteAccount/", {
+      .delete("http://192.168.0.43:4000/api/auth/deleteAccount/", {
         headers,
         data: data,
       })

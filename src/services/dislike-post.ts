@@ -4,7 +4,7 @@ export async function CreateDislikePost(postId: number) {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/posts/${postId}/dislike`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/posts/${postId}/dislike`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -21,7 +21,7 @@ export async function RemoveDislikePost(postId: number) {
 
 
   try {
-  const response = await axios.delete(`http://localhost:4000/api/posts/${postId}/removedislike`, {
+  const response = await axios.delete(`http://192.168.0.43:4000/api/posts/${postId}/removedislike`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
 

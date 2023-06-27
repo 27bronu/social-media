@@ -17,25 +17,31 @@ export default function UserDetailsPage({
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
 
   useEffect(() => {
-    getUserById(params.userId)
-      .then((fetchedUser) => {
-        getPostsByUserId(params.userId)
-          .then((fetchedPosts) => {
-            setUser(fetchedUser);
-            setPosts(fetchedPosts);
-          })
-          .catch(() => console.log("Error fetching posts"));
-      })
-      .catch(() => console.log("Error fetching user"));
+    getUserData();
   }, []);
 
   useEffect(() => {
+    checkIfUserIsFollowed();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const fetchedUser = await getUserById(params.userId);
+      const fetchedPosts = await getPostsByUserId(params.userId);
+      setUser(fetchedUser);
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  };
+
+  const checkIfUserIsFollowed = () => {
     const localStorageFollowedUsers = localStorage.getItem("followedUsers");
     if (localStorageFollowedUsers) {
       const followedUsers = JSON.parse(localStorageFollowedUsers);
       setIsFollowed(followedUsers.includes(params.userId));
     }
-  }, []);
+  };
 
   const handleFollow = async () => {
     try {
@@ -53,7 +59,6 @@ export default function UserDetailsPage({
         localStorage.setItem("followedUsers", JSON.stringify([params.userId]));
       }
 
-      // Increase the number of followers by 1
       setUser((prevUser: { followers: number }) => ({
         ...prevUser,
         followers: prevUser.followers + 1,
@@ -79,7 +84,6 @@ export default function UserDetailsPage({
         );
       }
 
-      // Decrease the number of followers by 1
       setUser((prevUser: { followers: number }) => ({
         ...prevUser,
         followers: prevUser.followers - 1,
@@ -92,14 +96,14 @@ export default function UserDetailsPage({
   return (
     <>
       {user && (
-        <div className="container mx-auto py-8">
+        <div>
           <div className="flex flex-col items-center pb-5 mt-5">
             <img
               className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg"
-              src="http://localhost:4000/uploads/fad5fde00a33054fc8216534e1c762bc.jpg"
+              src="http://192.168.0.43:4000/uploads/fad5fde00a33054fc8216534e1c762bc.jpg"
               alt="Default image"
             />
-            <h5 className="mb-1 text-xl font-medium text-gray-900 text-black">
+            <h5 className="mb-1 text-xl font-medium text-black">
               @{user.username}
             </h5>
             <span className="text-sm text-gray-500">{user.name}</span>
@@ -124,45 +128,8 @@ export default function UserDetailsPage({
                   Unfollow
                 </button>
               ) : (
-                <button
-                  onClick={handleFollow}
-                  className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
-                >
-                  Follow
-                </button>
-              )}
-            </div>
-          </div>
-          <span className="flex text-center justify-center">Posts</span>
-          <ul className="flex flex-col items-center justify-center text-center mt-3">
-            {posts.map((post: any) => (
-              <div key={post.id} className="flex flex-col items-center pb-5">
-                {post.media ? (
-                  <>
-                    <li
-                      key={post.id}
-                      className="m-2.5 max-w-sm pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
-                    >
-                      <Link href={`/posts/${post.id}`}>
-                        <img
-                          className="h-64 shadow-lg border border-gray-200 rounded-lg"
-                          src={post.media}
-                          alt="Default image"
-                        />
-                        <p className="text-sm break-words text-white m-2">
-                          {post.post}
-                        </p>
-                        <hr />
-                      </Link>
-                      <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                      <p className="text-center justify-center text-white text-xs">
-                        Created at:{" "}
-                        {new Date(post.created_at).toLocaleDateString("en-GB")}
-                      </p>
-                    </li>
-                  </>
-                ) : (
-                  <>
+                <ul>
+                  {posts.map((post: any) => (
                     <li
                       key={post.id}
                       className="m-2.5 w-96 pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
@@ -179,11 +146,11 @@ export default function UserDetailsPage({
                         {new Date(post.created_at).toLocaleDateString("en-GB")}
                       </p>
                     </li>
-                  </>
-                )}
-              </div>
-            ))}
-          </ul>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </>

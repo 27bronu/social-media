@@ -5,7 +5,7 @@ export async function FollowUser(userId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/users/${userId}/follow`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/users/${userId}/follow`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -22,7 +22,7 @@ export async function UnfollowUser(userId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/users/${userId}/unfollow`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/users/${userId}/unfollow`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 

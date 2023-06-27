@@ -7,11 +7,11 @@ import { getPostsById } from "@/services/get-post-by-id";
 import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
 import { CreateComment } from "@/services/create-comment";
 import { getProfile } from "@/services/profile";
-import CreateResponseForm from "@/components/CreateResponse";
+
 import Link from "next/link";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
-import { comment } from "postcss";
+
 
 export default function PostDetailsPage({
   params,

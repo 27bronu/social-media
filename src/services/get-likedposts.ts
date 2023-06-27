@@ -5,7 +5,7 @@ export async function getLikedPosts() {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/liked`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/liked`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 

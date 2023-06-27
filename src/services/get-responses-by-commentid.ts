@@ -5,7 +5,7 @@ export async function getResponsesByCommentId(commentId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/responsescomment/${commentId}`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/responsescomment/${commentId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     console.log(response.data?.responses)

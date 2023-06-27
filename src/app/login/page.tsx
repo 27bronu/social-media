@@ -23,7 +23,7 @@ const Login = () => {
     };
 
     axios
-      .post("http://192.168.0.72:4000/api/auth/login", user)
+      .post("http://192.168.0.43:4000/api/auth/login", user)
       .then((res) => {
         const token = res.data?.token;
         if (token) {
