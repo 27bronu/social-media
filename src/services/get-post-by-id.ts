@@ -5,7 +5,7 @@ export async function getPostsById(postId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/posts/${postId}`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/posts/${postId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 

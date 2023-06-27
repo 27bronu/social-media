@@ -5,7 +5,7 @@ export async function CreateLikeComment(commentId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/comment/${commentId}/like`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/comment/${commentId}/like`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -22,7 +22,7 @@ export async function RemoveLikeComment(commentId: number) {
 
 
   try {
-  const response = await axios.delete(`http://localhost:4000/api/comment/${commentId}/removelike`, {
+  const response = await axios.delete(`http://192.168.0.43:4000/api/comment/${commentId}/removelike`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
 

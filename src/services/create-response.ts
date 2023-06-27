@@ -15,7 +15,7 @@ export async function CreateResponse(commentId: number, text = "", image: File |
       formData.append('image', image);
     }
 
-    const response = await axios.post(`http://localhost:4000/api/responses/${commentId}`, formData, {
+    const response = await axios.post(`http://192.168.0.43:4000/api/responses/${commentId}`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
