@@ -153,7 +153,7 @@ const Feed = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://192.168.0.72:4000/api/posts", {
+      const response = await axios.get("http://192.168.0.43:4000/api/posts", {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
         },
@@ -163,7 +163,7 @@ const Feed = () => {
       const postsWithComments = await Promise.all(
         postsData.map(async (post: Post) => {
           const commentsResponse = await axios.get(
-            `http://192.168.0.72:4000/api/commentspost/${post.id}`,
+            `http://192.168.0.43:4000/api/commentspost/${post.id}`,
             {
               headers: {
                 Authorization: `Bearer ${bearerToken}`,

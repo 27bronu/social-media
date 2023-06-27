@@ -15,7 +15,7 @@ export async function CreateComment(postId: number, text = "", image: File | nul
       formData.append('image', image, image.name); // Adicione o nome do arquivo como terceiro parâmetro
     }
 
-    const response = await axios.post(`http://localhost:4000/api/comments/${postId}`, formData, {
+    const response = await axios.post(`http://192.168.0.43:4000/${postId}`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'

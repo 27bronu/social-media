@@ -6,6 +6,7 @@ import {
   AiOutlineDislike,
   AiFillDislike,
 } from "react-icons/ai";
+import React from "react";
 import { useEffect, useState } from "react";
 import {
   CreateLikeResponse,

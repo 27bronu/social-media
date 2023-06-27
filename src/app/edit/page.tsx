@@ -22,7 +22,7 @@ const EditAccount = () => {
       return;
     }
     axios
-      .get("http://192.168.0.72:4000/api/auth/profile/", {
+      .get("http://192.168.0.43:4000/api/auth/profile/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -113,7 +113,7 @@ const EditAccount = () => {
     }
 
     axios
-      .put("http://192.168.0.72:4000/api/updateprofile", formData, {
+      .put("http://192.168.0.43:4000/api/updateprofile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

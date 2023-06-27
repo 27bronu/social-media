@@ -5,7 +5,7 @@ export async function CreateDislikeComment(commentId: number) {
 
 
   try {
-    const response = await axios.get(`http://localhost:4000/api/comment/${commentId}/dislike`, {
+    const response = await axios.get(`http://192.168.0.43:4000/api/comment/${commentId}/dislike`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -22,7 +22,7 @@ export async function RemoveDislikeComment(commentId: number) {
 
 
   try {
-  const response = await axios.delete(`http://localhost:4000/api/comment/${commentId}/removedislike`, {
+  const response = await axios.delete(`http://192.168.0.43:4000/api/comment/${commentId}/removedislike`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
 

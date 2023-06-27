@@ -1,14 +1,13 @@
 "use client";
 
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { getCommentById } from "@/services/get-comment-by-id";
 import { getResponsesByCommentId } from "@/services/get-responses-by-commentid";
-
 import { CreateResponse } from "@/services/create-response";
 import { getProfile } from "@/services/profile";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Link from "next/link";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
 import LikeDislikeResponse from "@/components/LikeDislikeResponse";
 
@@ -125,14 +124,14 @@ export default function CommentDetailsPage({
   return (
     <>
       <div className="">
-        {!!user ? (
+        {user ? (
           <>
             <ul className="flex flex-col">
               <div
                 id="responseComment"
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
-                <ul className="flex flex-col items-center text-center justify-center text-center mx-2">
+                <ul className="flex flex-col items-center text-center justify-center mx-2">
                   <h2 className="font-bold text-left justify-left mb-1 text-white">
                     @{comment.username}
                   </h2>
@@ -194,7 +193,7 @@ export default function CommentDetailsPage({
                       )} */}
                       <button
                         onClick={handleResponseSubmit}
-                        className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm text-white"
+                        className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
                       >
                         Add Response
                       </button>

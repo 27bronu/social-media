@@ -33,7 +33,7 @@ export default function Profile() {
             <div className="flex flex-col items-center pb-5 mt-5">
               <img
                 className="mt-3 w-24 h-24 mb-3 rounded-full shadow-lg"
-                src="http://localhost:4000/uploads/fad5fde00a33054fc8216534e1c762bc.jpg"
+                src="http://192.168.0.43:4000/uploads/fad5fde00a33054fc8216534e1c762bc.jpg"
                 alt="Default image"
               />
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
