@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import axiosConfig from "@/services/axiosConfig";
-import AddReply from "@/components/AddReply";
 
 interface Reply {
   id: number;

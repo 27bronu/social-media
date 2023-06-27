@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import axiosConfig from "@/services/axiosConfig";
 import { FaImage, FaUsers, FaUserPlus } from "react-icons/fa";
 

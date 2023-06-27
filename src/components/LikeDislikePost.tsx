@@ -94,7 +94,7 @@ export default function LikeDislikePost({ idPost }: { idPost: number }) {
 
   return (
     <>
-      <div className="text-center justify-center flex flex-wrap my-2 text-white">
+      <div className='text-center justify-center flex flex-wrap my-2 text-white'>
         <button onClick={() => handleLikePost(idPost)}>
           {likedPost.includes(idPost) ? <AiFillLike /> : <AiOutlineLike />}
         </button>
