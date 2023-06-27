@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import axiosConfig from "@/services/axiosConfig";
 import { FaImage, FaUsers, FaUserPlus } from "react-icons/fa";
 
 interface UserProfile {
@@ -20,13 +21,8 @@ export default function UserInfo() {
   const infoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("http://localhost:4000/api/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    axiosConfig
+      .get("http://localhost:4000/api/auth/profile")
       .then((response) => {
         const { profile } = response.data;
         setUser(profile);

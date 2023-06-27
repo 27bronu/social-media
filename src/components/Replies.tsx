@@ -1,137 +1,120 @@
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from "axios";
 import { FaUserCircle } from "react-icons/fa";
+import axiosConfig from "@/services/axiosConfig";
+import AddReply from "@/components/AddReply";
 
-interface CommentResponse {
+interface Reply {
   id: number;
-  id_comment: number;
   username: string;
   text: string;
-  media: string;
+  media: string | null;
   created_at: string;
-  likes: number;
-  dislikes: number;
 }
 
-interface UserProfile {
+interface Profile {
   username: string;
-  media: string;
+  media: string | null;
 }
 
-type RepliesProps = {
+interface RepliesProps {
   commentId: number;
-};
+}
 
 const Replies: React.FC<RepliesProps> = ({ commentId }) => {
-  const [responses, setResponses] = useState<CommentResponse[]>([]);
-  const [users, setUsers] = useState<{ [key: string]: string }>({});
+  const [replies, setReplies] = useState<Reply[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+
+  const fetchReplies = async () => {
+    try {
+      const response = await axiosConfig.get(`/responsescomment/${commentId}`);
+      const { responses } = response.data;
+      setReplies(responses);
+    } catch (error) {
+      console.error("Error fetching replies:", error);
+    }
+  };
+
+  const fetchProfiles = async () => {
+    try {
+      const response = await axiosConfig.get("http://localhost:4000/api/users");
+      const { profiles } = response.data;
+      setProfiles(profiles);
+    } catch (error) {
+      console.error("Error fetching profiles:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchResponses = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response: AxiosResponse = await axios.get(
-          `http://localhost:4000/api/responsescomment/${commentId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setResponses(response.data.responses);
-      } catch (error) {
-        console.error("Error fetching responses:", error);
-      }
-    };
-
-    const fetchUserProfiles = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response: AxiosResponse = await axios.get(
-          "http://localhost:4000/api/users",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const userProfiles: UserProfile[] = response.data.profiles;
-        const userMap: { [key: string]: string } = {};
-
-        userProfiles.forEach((profile) => {
-          userMap[profile.username] = profile.media;
-        });
-
-        setUsers(userMap);
-      } catch (error) {
-        console.error("Error fetching user profiles:", error);
-      }
-    };
-
-    fetchResponses();
-    fetchUserProfiles();
+    fetchReplies();
+    fetchProfiles();
   }, [commentId]);
 
-  function formatDate(dateString: string): string {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  }
+  const getProfilePicture = (username: string) => {
+    const profile = profiles.find((profile) => profile.username === username);
+    return profile?.media || "";
+  };
 
-  if (responses.length === 0) {
-    return null;
-  }
+  const renderProfilePicture = (username: string) => {
+    const profilePicture = getProfilePicture(username);
+    return profilePicture ? (
+      <img
+        src={profilePicture}
+        alt='Profile Picture'
+        className='w-10 h-10 rounded-full mr-2'
+      />
+    ) : (
+      <FaUserCircle className='w-10 h-10 mr-2' />
+    );
+  };
+
+  const renderMedia = (media: string) => {
+    const fileExtension = media
+      .substring(media.lastIndexOf(".") + 1)
+      .toLowerCase();
+
+    if (
+      fileExtension === "png" ||
+      fileExtension === "jpg" ||
+      fileExtension === "jpeg"
+    ) {
+      return (
+        <img
+          src={media}
+          alt='Reply Media'
+          className='w-48 h-48 mt-2 rounded-lg'
+        />
+      );
+    } else if (fileExtension === "mp4") {
+      return (
+        <video src={media} controls className='w-48 h-48 mt-2 rounded-lg'>
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
-    <div className='mt-2 mb-2'>
-      <div className='bg-gray-900 p-4 rounded-lg'>
-        <h2 className='text-lg font-medium'>Replies</h2>
-        {responses.map((response) => (
-          <div key={response.id} className='mt-4 flex items-start'>
-            <div className='flex-shrink-0'>
-              {users[response.username] ? (
-                <img
-                  src={users[response.username]}
-                  alt='Profile Picture'
-                  className='w-10 h-10 rounded-full mr-4 drop-shadow-xl'
-                />
-              ) : (
-                <FaUserCircle className='w-10 h-10 text-gray-400 mr-4' />
-              )}
-            </div>
-            <div className='flex-grow'>
-              <div className='flex items-center mb-1'>
-                <p className='text-gray-400 font-medium mr-2'>
-                  @{response.username}
-                </p>
-                <p className='text-xs text-gray-400'>
-                  {formatDate(response.created_at)}
+    <div>
+      <div>
+        {replies.length > 0 && (
+          <div className='ml-8 mt-4'>
+            {replies.map((reply) => (
+              <div key={reply.id} className='bg-gray-900 rounded-lg p-4 mb-4'>
+                <div className='flex items-center mb-2'>
+                  {renderProfilePicture(reply.username)}
+                  <p className='text-gray-300 font-medium'>@{reply.username}</p>
+                </div>
+                <p className='text-white'>{reply.text}</p>
+                {reply.media !== null && renderMedia(reply.media)}
+                <p className='text-gray-400 text-sm mt-2'>
+                  {new Date(reply.created_at).toLocaleString()}
                 </p>
               </div>
-              <p>{response.text}</p>
-              {response.media && response.media.endsWith(".mp4") ? (
-                <video
-                  src={response.media}
-                  controls
-                  className='mt-2 w-48 h-48 object-cover rounded-lg'
-                />
-              ) : response.media ? (
-                <img
-                  src={response.media}
-                  alt='Reply Image'
-                  className='mt-2 w-48 h-48 object-cover rounded-lg'
-                />
-              ) : null}
-            </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

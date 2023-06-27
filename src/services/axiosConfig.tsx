@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({
+const axiosConfig = axios.create({
   baseURL: "http://localhost:4000/api",
   timeout: 5000,
 });
 
-axiosInstance.interceptors.request.use(
+axiosConfig.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -18,4 +18,4 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-export default axiosInstance;
+export default axiosConfig;

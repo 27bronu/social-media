@@ -1,25 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import axios, { AxiosResponse } from "axios";
+import axiosConfig from "@/services/axiosConfig";
 
 type CommentFormProps = {
   postId: number;
-  onCommentAdded: (
-    postId: number,
-    commentText: string,
-    commentImage?: string
-  ) => void;
 };
 
-interface Comment {
-  postId: number;
-  commentText: string;
-  commentImage: string;
-}
-
-const CommentForm: React.FC<CommentFormProps> = ({
-  postId,
-  onCommentAdded,
-}) => {
+const CommentForm: React.FC<CommentFormProps> = ({ postId }) => {
   const [commentText, setCommentText] = useState("");
   const [commentImage, setCommentImage] = useState<File | null>(null);
 
@@ -43,24 +29,11 @@ const CommentForm: React.FC<CommentFormProps> = ({
         formData.append("image", commentImage);
       }
 
-      const response: AxiosResponse = await axios.post(
-        `http://localhost:4000/api/comments/${postId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      const newComment: Comment = {
-        postId: postId,
-        commentText: commentText,
-        commentImage: response.data.commentImage,
-      };
-
-      onCommentAdded(postId, commentText, response.data.commentImage);
+      const response = await axiosConfig.post(`/comments/${postId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setCommentText("");
       setCommentImage(null);

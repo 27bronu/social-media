@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { fetchPostsWithComments, fetchUsersData } from "@/services/apiService";
+import { FaUserCircle } from "react-icons/fa";
 import CommentForm from "@/components/CommentForm";
 import CommentItem from "@/components/Comments";
-import { FaUserCircle } from "react-icons/fa";
 
 interface Post {
   id: number;
@@ -15,16 +15,6 @@ interface Post {
   comments: Comment[];
 }
 
-interface Response {
-  id: number;
-  id_comment: number;
-  username: string;
-  name: string;
-  media: string;
-  text: string;
-  created_at: string;
-}
-
 interface Comment {
   id: number;
   id_post: number;
@@ -33,7 +23,6 @@ interface Comment {
   media: string;
   text: string;
   created_at: string;
-  replies: Response[];
 }
 
 interface PostsProps {
@@ -41,11 +30,6 @@ interface PostsProps {
   users: { [key: string]: string };
   showMore: number[];
 
-  handleCommentAdded: (
-    postId: number,
-    commentText: string,
-    commentImage?: string
-  ) => void;
   toggleShowMore: (postId: number) => void;
 }
 
@@ -82,7 +66,6 @@ const PostImage: React.FC<{ media?: string }> = ({ media }) => {
 const Posts: React.FC<PostsProps> = ({
   posts,
   users,
-  handleCommentAdded,
   showMore,
   toggleShowMore,
 }) => {
@@ -91,7 +74,7 @@ const Posts: React.FC<PostsProps> = ({
       <h1 className='text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
         Feed
       </h1>
-      {posts.map((post, index) => (
+      {posts.map((post) => (
         <div
           key={post.id}
           className='bg-gray-700 rounded-lg shadow-md p-4 mb-8'>
@@ -117,7 +100,7 @@ const Posts: React.FC<PostsProps> = ({
             {post.comments && post.comments.length ? (
               <div className='mt-4 space-y-4'>
                 {post.comments
-                  .slice(0, showMore.includes(post.id) ? undefined : 3) // Show only first 3 comments if not expanded
+                  .slice(0, showMore.includes(post.id) ? undefined : 3)
                   .map((comment) => (
                     <CommentItem
                       key={comment.id}
@@ -139,7 +122,7 @@ const Posts: React.FC<PostsProps> = ({
               <p>No comments for this post.</p>
             )}
           </div>
-          <CommentForm postId={post.id} onCommentAdded={handleCommentAdded} />
+          <CommentForm postId={post.id} />
         </div>
       ))}
     </div>
@@ -158,14 +141,6 @@ const Home: React.FC<HomeProps> = ({}) => {
     fetchUsersData().then((data) => setUsers(data));
   }, []);
 
-  const handleCommentAdded = (
-    postId: number,
-    commentText: string,
-    commentImage?: string
-  ) => {
-    // Logic to add comment
-  };
-
   const toggleShowMore = (postId: number) => {
     if (showMore.includes(postId)) {
       setShowMore(showMore.filter((id) => id !== postId));
@@ -180,7 +155,6 @@ const Home: React.FC<HomeProps> = ({}) => {
         posts={posts}
         users={users}
         showMore={showMore}
-        handleCommentAdded={handleCommentAdded}
         toggleShowMore={toggleShowMore}
       />
     </div>

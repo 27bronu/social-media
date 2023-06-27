@@ -1,5 +1,6 @@
 import React from "react";
 import UserInfo from "@/components/UserInfo";
+import AddPost from "@/components/AddPost";
 
 function Navbar() {
   return (
@@ -10,7 +11,10 @@ function Navbar() {
             ExtSocial
           </span>
         </div>
-        <UserInfo />
+        <div className='flex items-center'>
+          <AddPost onPostAdded={(newPost: any) => console.log(newPost)} />
+          <UserInfo />
+        </div>
       </div>
     </nav>
   );

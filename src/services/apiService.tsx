@@ -1,15 +1,15 @@
-import axiosInstance from "@/services/apiConfig";
+import axiosConfig from "@/services/axiosConfig";
 
 // Fetch posts with comments
 export async function fetchPostsWithComments() {
   try {
-    const response = await axiosInstance.get("/posts");
+    const response = await axiosConfig.get("/posts");
 
     const postsData = response.data.posts;
 
     const postsWithComments = await Promise.all(
       postsData.map(async (post: any) => {
-        const commentsResponse = await axiosInstance.get(
+        const commentsResponse = await axiosConfig.get(
           `/commentspost/${post.id}`
         );
         const commentsData = commentsResponse.data.comments;
@@ -24,12 +24,21 @@ export async function fetchPostsWithComments() {
   }
 }
 
-export async function fetchUsersData() {
+export const fetchUsersData = async () => {
   try {
-    const response = await axiosInstance.get("/users");
-    return response.data.profiles;
+    const response = await axiosConfig.get("/users");
+
+    const { profiles } = response.data;
+
+    const usersData: { [key: string]: string } = {};
+
+    profiles.forEach((profile: { username: string; media: string | null }) => {
+      usersData[profile.username] = profile.media || "";
+    });
+
+    return usersData;
   } catch (error) {
-    console.error("Error fetching users:", error);
-    throw error;
+    console.error("Error fetching user data:", error);
+    return {};
   }
-}
+};
