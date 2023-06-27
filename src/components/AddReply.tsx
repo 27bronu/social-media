@@ -55,7 +55,7 @@ const AddReply: React.FC<AddReplyProps> = ({ commentId, onReplyAdded }) => {
       }
 
       const response = await axios.post(
-        `http://localhost:4000/api/responses/${commentId}`,
+        `http://192.168.0.43:4000/api/responses/${commentId}`,
         formData,
         {
           headers: {

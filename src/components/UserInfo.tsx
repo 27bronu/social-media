@@ -22,7 +22,7 @@ export default function UserInfo() {
 
   useEffect(() => {
     axiosConfig
-      .get("http://localhost:4000/api/auth/profile")
+      .get("http://192.168.0.43:4000/api/auth/profile")
       .then((response) => {
         const { profile } = response.data;
         setUser(profile);

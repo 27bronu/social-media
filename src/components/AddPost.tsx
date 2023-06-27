@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import axios from "axios";
 import axiosConfig from "@/services/axiosConfig";
 
 interface AddPostProps {

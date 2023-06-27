@@ -36,7 +36,9 @@ const Replies: React.FC<RepliesProps> = ({ commentId }) => {
 
   const fetchProfiles = async () => {
     try {
-      const response = await axiosConfig.get("http://localhost:4000/api/users");
+      const response = await axiosConfig.get(
+        "http://192.168.0.43:4000/api/users"
+      );
       const { profiles } = response.data;
       setProfiles(profiles);
     } catch (error) {
