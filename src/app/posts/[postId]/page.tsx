@@ -1,17 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPostsById } from "@/services/get-post-by-id";
 import { getCommentsByPostId } from "@/services/get-comments-by-post-id";
 import { CreateComment } from "@/services/create-comment";
 import { getProfile } from "@/services/profile";
-
-import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
-
 
 export default function PostDetailsPage({
   params,
@@ -19,8 +17,8 @@ export default function PostDetailsPage({
   params: { postId: number };
 }) {
   const [user, setUser] = useState<any>();
-  const [post, setPost] = useState<any>();
-  const [comments, setComments] = useState<any>([]);
+  const [post, setPosts] = useState<any>([]);
+  const [comments, setComments] = useState<any>();
   const [commentInput, setCommentInput] = useState("");
   const [imageCommentInput, setimageCommentInput] = useState<File | null>(null);
   const [showCommentInput, setShowCommentInput] = useState(false);
@@ -35,15 +33,15 @@ export default function PostDetailsPage({
       });
 
     getPostsById(params.postId)
-      .then((fetchedPosts) => {
+      .then((fetchedPost) => {
         getCommentsByPostId(params.postId)
           .then((fetchedComments) => {
-            setPost(fetchedPosts);
+            setPosts(fetchedPost);
             setComments(fetchedComments);
           })
           .catch(() => console.log("erro comments"));
       })
-      .catch(() => console.log("erro posts"));
+      .catch(() => console.log("erro post"));
   }, []);
 
   const handleCommentInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +56,6 @@ export default function PostDetailsPage({
       const allowedFileTypes = [".png", ".jpg", ".gif"];
       const fileType = file.name.substring(file.name.lastIndexOf("."));
 
-      console.log(allowedFileTypes);
       if (allowedFileTypes.includes(fileType)) {
         setimageCommentInput(file);
 
@@ -73,13 +70,12 @@ export default function PostDetailsPage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleCommentSubmit = async () => {
-    if (!commentInput && !imageCommentInput) {
-      toast.error("Neither the comment text nor the image was loaded");
-      return;
-    }
-
     try {
-      // Verifique se os valores de commentInput e imageCommentInput estão corretos
+      if (!commentInput && !imageCommentInput) {
+        toast.error("Neither the response text nor the image was loaded");
+        return;
+      }
+      // Verifique se os valores de CommentInput e imageCommentInput estão corretos
       const newComment = {
         id: comments.length + 1,
         postId: params.postId,
@@ -106,6 +102,7 @@ export default function PostDetailsPage({
       });
 
       // Atualize o estado dos comentários
+      setComments([newComment, ...comments]);
       setCommentInput("");
       setimageCommentInput(null);
       toast.success("Comment created successfully!");
@@ -125,19 +122,19 @@ export default function PostDetailsPage({
   return (
     <>
       <div className="">
-        {post ? (
+        {user ? (
           <>
             <ul className="flex flex-col">
               <div
-                id="commentspost"
+                id="responseComment"
                 className="text-left justify-left p-2 mt-7 mx-52 border border-gray-200 rounded-lg bg-slate-900 overflow-auto"
               >
-                <ul className="flex flex-col items-center text-center justify-center mx-2 ">
+                <ul className="flex flex-col items-center text-center justify-center mx-2">
+                  <h2 className="font-bold text-left justify-left mb-1 text-white">
+                    @{post.username}
+                  </h2>
                   {post.media ? (
                     <>
-                      <h2 className="font-bold text-left text-white justify-left mb-1">
-                        @{post.username}
-                      </h2>
                       <img
                         className="h-80 border border-gray-200 rounded-lg"
                         src={post.media}
@@ -149,15 +146,17 @@ export default function PostDetailsPage({
                   )}
                 </ul>
                 <p className="text-center justify-center mt-2 pl-2 mb-1 mx-44 font-medium text-gray-900 dark:text-white">
-                  {post.post}
+                  {post.text}
                 </p>
-                <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                <div className="flex text-center justify-center">
+                  <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                </div>
                 <p className="text-center justify-center text-xs text-white">
                   Created at: {formattedDatePost}
                 </p>
                 <hr />
 
-                <div className="commentIput">
+                <div className="responseInput">
                   <button
                     onClick={handleToggleCommentInput}
                     className="bg-blue-500 text-white mt-1 py-1 px-2 rounded-lg text-sm"
@@ -176,29 +175,29 @@ export default function PostDetailsPage({
                       <input
                         ref={inputRef}
                         type="file"
+                        id="imageResponse"
                         accept="image/*"
                         onChange={handleImageCommentInput}
                         className="p-1 mb-2 text-sm text-white"
                       />
-                      {/* {imageCommentInput && (
+                      {/* {imageResponseInput && (
                         <img
-                          src={imageCommentInput}
+                          src={imageResponseInput}
                           alt="Selected Image"
                           className="max-w-full max-h-44 mb-2"
                         />
                       )} */}
                       <button
-                        //handleCommentSubmit
                         onClick={handleCommentSubmit}
                         className="bg-blue-500 text-white py-1 px-2 rounded-lg text-sm"
                       >
-                        Add Comment
+                        Add Response
                       </button>
                     </div>
                   )}
                 </div>
                 <div className="">
-                  {comments.map((comment: any) => (
+                  {comments?.map((comment: any) => (
                     <>
                       <li
                         className="mt-2 px-2 py-1 flex flex-wrap border border-gray-300 rounded-lg"
@@ -279,11 +278,6 @@ export default function PostDetailsPage({
                           </div>
                         </div>
                       </li>
-                      <div className="text-center font-bold justify-center bg-gray-500 text-white px-2 py-1 rounded-lg text-xs">
-                        <Link href={`/comments/${comment.id}`}>
-                          Show Comment
-                        </Link>
-                      </div>
                     </>
                   ))}
                 </div>

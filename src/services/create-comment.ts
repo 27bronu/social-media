@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export async function CreateComment(postId: number, text = "", image: File | null) {
   const token = localStorage.getItem("token");
@@ -12,20 +12,20 @@ export async function CreateComment(postId: number, text = "", image: File | nul
     }
 
     if (image) {
-      formData.append('image', image, image.name); // Adicione o nome do arquivo como terceiro parâmetro
+      formData.append('image', image);
     }
 
-    const response = await axios.post(`http://192.168.0.43:4000/${postId}`, formData, {
+    const response = await axios.post(`http://192.168.0.43:4000/api/comments/${postId}`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       }
     });
 
-    const commentResponse = response.data;
-    return commentResponse;
+    const responseResponse = response.data;
+    return responseResponse;
   } catch (error) {
-    console.error('Error Creating Comment:', error);
+    console.error('Error Creating Response:', error);
     return null;
   }
 }

@@ -128,27 +128,33 @@ export default function UserDetailsPage({
                   Unfollow
                 </button>
               ) : (
-                <ul>
-                  {posts.map((post: any) => (
-                    <li
-                      key={post.id}
-                      className="m-2.5 w-96 pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
-                    >
-                      <Link href={`/posts/${post.id}`}>
-                        <p className="text-sm break-words text-white m-2">
-                          {post.post}
-                        </p>
-                        <hr />
-                      </Link>
-                      <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                      <p className="text-center justify-center text-xs text-white">
-                        Created at:{" "}
-                        {new Date(post.created_at).toLocaleDateString("en-GB")}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                <button
+                  onClick={handleFollow}
+                  className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
+                >
+                  Follow
+                </button>
               )}
+              <ul>
+                {posts.map((post: any) => (
+                  <li
+                    key={post.id}
+                    className="m-2.5 w-96 pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
+                  >
+                    <Link href={`/posts/${post.id}`}>
+                      <p className="text-sm break-words text-white m-2">
+                        {post.post}
+                      </p>
+                      <hr />
+                    </Link>
+                    <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                    <p className="text-center justify-center text-xs text-white">
+                      Created at:{" "}
+                      {new Date(post.created_at).toLocaleDateString("en-GB")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
