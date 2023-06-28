@@ -142,13 +142,13 @@ export default function UserDetailsPage({
                     className="m-2.5 w-96 pb-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 transform transition duration-100 hover:scale-95"
                   >
                     <Link href={`/posts/${post.id}`}>
-                      <p className="text-sm break-words text-white m-2">
+                      <p className="text-sm break-words text-black dark:text-white m-2">
                         {post.post}
                       </p>
                       <hr />
                     </Link>
                     <LikeDislikePost idPost={post.id}></LikeDislikePost>
-                    <p className="text-center justify-center text-xs text-white">
+                    <p className="text-center justify-center text-xs text-black dark:text-white">
                       Created at:{" "}
                       {new Date(post.created_at).toLocaleDateString("en-GB")}
                     </p>
