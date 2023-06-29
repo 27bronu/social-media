@@ -4,6 +4,8 @@ import Replies from "@/components/Replies";
 import AddReply from "@/components/AddReply";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
 import DeleteCommentButton from "@/components/DeleteCommentButton";
+import { FaUserCircle } from "react-icons/fa";
+
 interface Comment {
   id: number;
   username: string;
@@ -70,7 +72,7 @@ const Comments: React.FC<CommentsProps> = ({ comment }) => {
               className='w-10 h-10 rounded-full mr-2'
             />
           ) : (
-            <div className='w-10 h-10 rounded-full mr-2 bg-gray-500' />
+            <FaUserCircle className='w-16 h-16 text-gray-400 mr-2' />
           )}
           <p className='text-gray-300 font-medium'>@{username}</p>
         </div>
