@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axiosConfig from "@/services/axiosConfig";
 import Replies from "@/components/Replies";
-import AddReply from "@/components/AddReply"; // Import the Reply type
-
+import AddReply from "@/components/AddReply";
+import LikeDislikeComment from "@/components/LikeDislikeComment";
+import DeleteCommentButton from "@/components/DeleteCommentButton";
 interface Comment {
   id: number;
   username: string;
@@ -51,9 +52,7 @@ const Comments: React.FC<CommentsProps> = ({ comment }) => {
   }
 
   const handleReplyAdded = (reply: Reply) => {
-    // Placeholder implementation
     console.log("Reply added:", reply);
-    // You can update the state or perform any necessary actions here
   };
 
   useEffect(() => {
@@ -84,6 +83,10 @@ const Comments: React.FC<CommentsProps> = ({ comment }) => {
           />
         )}
         <p className='text-gray-400 text-sm mt-2'>{formattedDate}</p>
+        <LikeDislikeComment idComment={comment.id} />
+        <div>
+          <DeleteCommentButton commentId={comment.id} />
+        </div>
         <AddReply commentId={comment.id} onReplyAdded={handleReplyAdded} />
       </div>
       <Replies commentId={comment.id} />

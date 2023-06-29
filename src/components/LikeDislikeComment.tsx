@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   AiOutlineLike,
@@ -40,7 +38,7 @@ export default function LikeDislikeComment({
   const handleLikeComment = async (commentId: number) => {
     try {
       if (likedComment.includes(commentId)) {
-        // Se o comment já foi curtido, remova o like
+        // If the comment has already been liked, remove the like
         await RemoveLikeComment(commentId);
         const updatedLikedComments = likedComment.filter(
           (id) => id !== commentId
@@ -50,9 +48,9 @@ export default function LikeDislikeComment({
           "likedComments",
           JSON.stringify(updatedLikedComments)
         );
-        console.log("Removeu o like");
+        console.log("Removed like");
       } else {
-        // Caso contrário, adicione o like
+        // Otherwise, add the like
         await RemoveDislikeComment(commentId);
         await CreateLikeComment(commentId);
         const updatedLikedComments = [...likedComment, commentId];
@@ -66,17 +64,17 @@ export default function LikeDislikeComment({
           "dislikedComments",
           JSON.stringify(dislikedComment.filter((id) => id !== commentId))
         );
-        console.log("Adicionou o like");
+        console.log("Added like");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o like:", error);
+      console.error("Error handling like:", error);
     }
   };
 
   const handleDislikeComment = async (commentId: number) => {
     try {
       if (dislikedComment.includes(commentId)) {
-        // Se o Comment já foi descurtido, remova o dislike
+        // If the comment has already been disliked, remove the dislike
         await RemoveDislikeComment(commentId);
         const updatedDislikedComments = dislikedComment.filter(
           (id) => id !== commentId
@@ -86,9 +84,9 @@ export default function LikeDislikeComment({
           "dislikedComments",
           JSON.stringify(updatedDislikedComments)
         );
-        console.log("Removeu o dislike");
+        console.log("Removed dislike");
       } else {
-        // Caso contrário, adicione o dislike
+        // Otherwise, add the dislike
         await RemoveLikeComment(commentId);
         await CreateDislikeComment(commentId);
         const updatedDislikedComments = [...dislikedComment, commentId];
@@ -102,28 +100,38 @@ export default function LikeDislikeComment({
           "likedComments",
           JSON.stringify(likedComment.filter((id) => id !== commentId))
         );
-        console.log("Adicionou o dislike");
+        console.log("Added dislike");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o dislike:", error);
+      console.error("Error handling dislike:", error);
     }
   };
 
   return (
     <>
-      <div className="text-left justify-left flex flex-wrap my-1 text-white">
-        <button onClick={() => handleLikeComment(idComment)}>
+      <div className='text-left justify-left flex flex-wrap my-1 text-3xl'>
+        <button
+          onClick={() => handleLikeComment(idComment)}
+          className={`${
+            likedComment.includes(idComment) ? "text-blue-500" : "text-gray-500"
+          } hover:text-blue-500`}>
           {likedComment.includes(idComment) ? (
-            <AiFillLike />
+            <AiFillLike className='inline-block' />
           ) : (
-            <AiOutlineLike />
+            <AiOutlineLike className='inline-block' />
           )}
         </button>
-        <button onClick={() => handleDislikeComment(idComment)}>
+        <button
+          onClick={() => handleDislikeComment(idComment)}
+          className={`ml-2 ${
+            dislikedComment.includes(idComment)
+              ? "text-red-500"
+              : "text-gray-500"
+          } hover:text-red-500`}>
           {dislikedComment.includes(idComment) ? (
-            <AiFillDislike />
+            <AiFillDislike className='inline-block' />
           ) : (
-            <AiOutlineDislike />
+            <AiOutlineDislike className='inline-block' />
           )}
         </button>
       </div>

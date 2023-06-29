@@ -3,6 +3,8 @@ import { fetchPostsWithComments, fetchUsersData } from "@/services/apiService";
 import { FaUserCircle } from "react-icons/fa";
 import CommentForm from "@/components/CommentForm";
 import CommentItem from "@/components/Comments";
+import LikeDislikePost from "@/components/LikeDislikePost";
+import DeletePostButton from "@/components/DeletePostButton";
 
 interface Post {
   id: number;
@@ -12,6 +14,7 @@ interface Post {
   post: string;
   media?: string;
   created_at: string;
+  userId: string;
   comments: Comment[];
 }
 
@@ -70,61 +73,76 @@ const Posts: React.FC<PostsProps> = ({
   toggleShowMore,
 }) => {
   return (
-    <div className='text-white h-auto px-8 py-4 rounded-lg'>
-      <h1 className='text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
+    <div className='text-white px-4 rounded-lg mx-auto max-w-3xl mb-8'>
+      <h1 className='mb-8 text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500'>
         Feed
       </h1>
-      {posts.map((post) => (
-        <div
-          key={post.id}
-          className='bg-gray-700 rounded-lg shadow-md p-4 mb-8'>
-          <div className='flex items-center mb-4'>
-            {post.username in users ? (
-              <img
-                src={users[post.username]}
-                alt='Profile Picture'
-                className='w-16 h-16 rounded-full mr-2 drop-shadow-xl'
-              />
-            ) : (
-              <FaUserCircle className='w-16 h-16 text-gray-400 mr-2' />
-            )}
+      <div className='space-y-8'>
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className='bg-gray-700 rounded-lg shadow-md p-4 mb-8'>
+            <div className='flex items-center mb-4'>
+              {post.username in users ? (
+                <img
+                  src={users[post.username]}
+                  alt='Profile Picture'
+                  className='w-16 h-16 rounded-full mr-2 drop-shadow-xl'
+                />
+              ) : (
+                <FaUserCircle className='w-16 h-16 text-gray-400 mr-2' />
+              )}
+              <div>
+                <h2 className='text-lg font-bold -mb-1'>{post.name}</h2>
+                <h3 className='text-lg text-gray-300'>@{post.username}</h3>
+              </div>
+              <div className='ml-auto'>
+                <div className='text-red-500 hover:text-red-600'>
+                  <DeletePostButton postId={post.id} />
+                </div>
+              </div>
+            </div>
             <div>
-              <h2 className='text-lg font-bold -mb-1'>{post.name}</h2>
-              <h3 className='text-lg text-gray-300'>@{post.username}</h3>
+              <p className='mb-4'>{post.post}</p>
+              <div className='relative'>
+                <PostImage media={post.media} />
+              </div>
+              <p className='text-sm mb-2'>{formatDate(post.created_at)}</p>
+              <LikeDislikePost idPost={post.id} />
+            </div>
+
+            <div>
+              {post.comments && post.comments.length ? (
+                <div className='mt-4 space-y-4'>
+                  {post.comments
+                    .slice(0, showMore.includes(post.id) ? undefined : 3)
+                    .map((comment) => (
+                      <CommentItem
+                        key={comment.id}
+                        comment={comment}
+                        users={users}
+                      />
+                    ))}
+                  {post.comments.length > 3 && (
+                    <button
+                      onClick={() => toggleShowMore(post.id)}
+                      className='text-gray-200 mt-2 focus:outline-none'>
+                      {showMore.includes(post.id)
+                        ? "Show Less Comments"
+                        : "Show More Comments"}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <p>No comments for this post.</p>
+              )}
+            </div>
+            <div>
+              <CommentForm postId={post.id} />
             </div>
           </div>
-          <p className='mb-4'>{post.post}</p>
-          <PostImage media={post.media} />
-          <p className='text-sm mb-2'>{formatDate(post.created_at)}</p>
-          <div>
-            {post.comments && post.comments.length ? (
-              <div className='mt-4 space-y-4'>
-                {post.comments
-                  .slice(0, showMore.includes(post.id) ? undefined : 3)
-                  .map((comment) => (
-                    <CommentItem
-                      key={comment.id}
-                      comment={comment}
-                      users={users}
-                    />
-                  ))}
-                {post.comments.length > 3 && (
-                  <button
-                    onClick={() => toggleShowMore(post.id)}
-                    className='text-gray-200 mt-2 focus:outline-none'>
-                    {showMore.includes(post.id)
-                      ? "Show Less Comments"
-                      : "Show More Comments"}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <p>No comments for this post.</p>
-            )}
-          </div>
-          <CommentForm postId={post.id} />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

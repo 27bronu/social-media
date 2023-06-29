@@ -32,48 +32,38 @@ const AddPost: React.FC<AddPostProps> = ({ onPostAdded }) => {
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Create a new FormData object
     const formData = new FormData();
     formData.append("text", postText);
 
-    // Check if postImage is not null before appending
     if (postImage) {
       formData.append("image", postImage);
     }
 
     try {
-      // Send the multipart form data request using Axios
       const response = await axiosConfig.post("/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      // Check if the request was successful
       if (response.status === 200) {
-        // Post was successfully created
         const newPost = response.data;
 
-        // Reset form fields
         setPostText("");
         setPostImage(null);
         handleCloseModal();
 
-        // Pass the newPost object to the onPostAdded prop
         onPostAdded(newPost);
       } else {
-        // Handle the error if the request was not successful
-        console.error("Error creating post. Status:", response.status);
+        console.log("Post Created. Status:", response.status);
       }
     } catch (error: any) {
-      // Handle any network or other errors
       console.error(
         "Error creating post:",
         error?.response?.data ?? error.message
       );
     }
 
-    // Close the modal by setting isModalOpen to false
     setIsModalOpen(false);
   };
 

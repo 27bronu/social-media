@@ -6,8 +6,7 @@ import {
   AiOutlineDislike,
   AiFillDislike,
 } from "react-icons/ai";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CreateLikeResponse,
   RemoveLikeResponse,
@@ -43,7 +42,7 @@ export default function LikeDislikeResponse({
   const handleLikeResponse = async (responseId: number) => {
     try {
       if (likedResponse.includes(responseId)) {
-        // Se o response já foi curtido, remova o like
+        // If the response was already liked, remove the like
         await RemoveLikeResponse(responseId);
         const updatedLikedResponses = likedResponse.filter(
           (id) => id !== responseId
@@ -53,9 +52,9 @@ export default function LikeDislikeResponse({
           "likedResponses",
           JSON.stringify(updatedLikedResponses)
         );
-        console.log("Removeu o like");
+        console.log("Removed the like");
       } else {
-        // Caso contrário, adicione o like
+        // Otherwise, add the like
         await RemoveDislikeResponse(responseId);
         await CreateLikeResponse(responseId);
         const updatedLikedResponses = [...likedResponse, responseId];
@@ -69,17 +68,17 @@ export default function LikeDislikeResponse({
           "dislikedResponses",
           JSON.stringify(dislikedResponse.filter((id) => id !== responseId))
         );
-        console.log("Adicionou o like");
+        console.log("Added the like");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o like:", error);
+      console.error("Error handling the like:", error);
     }
   };
 
   const handleDislikeResponse = async (responseId: number) => {
     try {
       if (dislikedResponse.includes(responseId)) {
-        // Se o Response já foi descurtido, remova o dislike
+        // If the response was already disliked, remove the dislike
         await RemoveDislikeResponse(responseId);
         const updatedDislikedResponses = dislikedResponse.filter(
           (id) => id !== responseId
@@ -89,9 +88,9 @@ export default function LikeDislikeResponse({
           "dislikedResponses",
           JSON.stringify(updatedDislikedResponses)
         );
-        console.log("Removeu o dislike");
+        console.log("Removed the dislike");
       } else {
-        // Caso contrário, adicione o dislike
+        // Otherwise, add the dislike
         await RemoveLikeResponse(responseId);
         await CreateDislikeResponse(responseId);
         const updatedDislikedResponses = [...dislikedResponse, responseId];
@@ -105,31 +104,39 @@ export default function LikeDislikeResponse({
           "likedResponses",
           JSON.stringify(likedResponse.filter((id) => id !== responseId))
         );
-        console.log("Adicionou o dislike");
+        console.log("Added the dislike");
       }
     } catch (error) {
-      console.error("Erro ao lidar com o dislike:", error);
+      console.error("Error handling the dislike:", error);
     }
   };
 
   return (
-    <>
-      <div className="text-left justify-left flex flex-wrap my-1 text-white">
-        <button onClick={() => handleLikeResponse(idResponse)}>
-          {likedResponse.includes(idResponse) ? (
-            <AiFillLike />
-          ) : (
-            <AiOutlineLike />
-          )}
-        </button>
-        <button onClick={() => handleDislikeResponse(idResponse)}>
-          {dislikedResponse.includes(idResponse) ? (
-            <AiFillDislike />
-          ) : (
-            <AiOutlineDislike />
-          )}
-        </button>
-      </div>
-    </>
+    <div className='flex items-center mt-1'>
+      <button
+        className={`text-2xl ${
+          likedResponse.includes(idResponse) ? "text-blue-500" : "text-gray-500"
+        } hover:text-blue-500`}
+        onClick={() => handleLikeResponse(idResponse)}>
+        {likedResponse.includes(idResponse) ? (
+          <AiFillLike className='inline-block mr-1' />
+        ) : (
+          <AiOutlineLike className='inline-block mr-1' />
+        )}
+      </button>
+      <button
+        className={`text-2xl ml-2 ${
+          dislikedResponse.includes(idResponse)
+            ? "text-red-500"
+            : "text-gray-500"
+        } hover:text-red-500`}
+        onClick={() => handleDislikeResponse(idResponse)}>
+        {dislikedResponse.includes(idResponse) ? (
+          <AiFillDislike className='inline-block' />
+        ) : (
+          <AiOutlineDislike className='inline-block' />
+        )}
+      </button>
+    </div>
   );
 }

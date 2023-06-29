@@ -57,7 +57,7 @@ export default function UserInfo() {
   }
 
   return (
-    <div className='bg-gray-600 rounded-full flex items-center justify-center pr-4'>
+    <div className='bg-gray-600 flex items-center justify-center pr-4 rounded-full'>
       <div className='relative' ref={infoRef}>
         {user && (
           <div
@@ -78,7 +78,7 @@ export default function UserInfo() {
           </div>
         )}
         {showInfo && (
-          <div className='absolute right-0 mt-2 p-4 bg-gray-600 text-white shadow-md rounded-md min-w-max'>
+          <div className='right-0 mt-2 p-4 bg-gray-600 text-white shadow-md rounded-md min-w-max absolute'>
             <div className='flex items-center mb-4'>
               {!user?.media ? (
                 <div className='w-10 h-10 bg-gray-200 rounded-full mr-2'></div>
@@ -106,6 +106,23 @@ export default function UserInfo() {
               <FaImage className='mr-2' />
               <span>Posts: {user?.posts}</span>
             </p>
+            <div>
+              <div className='mt-4'>
+                <a
+                  className='bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full text-center'
+                  href='/edit'>
+                  Edit Account
+                </a>
+              </div>
+
+              <div className='mt-4'>
+                <a
+                  className='bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full text-center'
+                  href='/logout'>
+                  Logout
+                </a>
+              </div>
+            </div>
           </div>
         )}
       </div>

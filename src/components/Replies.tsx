@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import axiosConfig from "@/services/axiosConfig";
+import LikeDislikeResponse from "@/components/LikeDislikeResponse";
+import DeleteResponseButton from "@/components/DeleteResponseButton";
 
 interface Reply {
   id: number;
@@ -100,7 +102,7 @@ const Replies: React.FC<RepliesProps> = ({ commentId }) => {
     <div>
       <div>
         {replies.length > 0 && (
-          <div className='ml-8 mt-4'>
+          <div className='ml-8 mt-4 space-y-4'>
             {replies.map((reply) => (
               <div key={reply.id} className='bg-gray-900 rounded-lg p-4 mb-4'>
                 <div className='flex items-center mb-2'>
@@ -111,7 +113,11 @@ const Replies: React.FC<RepliesProps> = ({ commentId }) => {
                 {reply.media !== null && renderMedia(reply.media)}
                 <p className='text-gray-400 text-sm mt-2'>
                   {new Date(reply.created_at).toLocaleString()}
+                  <LikeDislikeResponse idResponse={reply.id} />{" "}
                 </p>
+                <div>
+                  <DeleteResponseButton replyId={reply.id} />
+                </div>
               </div>
             ))}
           </div>
