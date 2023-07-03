@@ -94,7 +94,7 @@ export default function LikeDislikePost({ idPost }: { idPost: number }) {
 
   return (
     <>
-      <div className='flex justify-left items-left my-2 text-4xl'>
+      <div className='flex justify-left items-left my-2 text-xl'>
         <button
           onClick={() => handleLikePost(idPost)}
           className={`${

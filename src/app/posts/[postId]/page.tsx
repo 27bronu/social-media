@@ -10,6 +10,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function PostDetailsPage({
   params,
@@ -121,7 +124,8 @@ export default function PostDetailsPage({
 
   return (
     <>
-      <div className="">
+      <Navbar />
+      <div>
         {user ? (
           <>
             <ul className="flex flex-col">
@@ -276,6 +280,12 @@ export default function PostDetailsPage({
                               )}
                             </p>
                           </div>
+                          <Link
+                            className="text-blue-300 "
+                            href={`/comments/${comment.id}`}
+                          >
+                            Show Comments Details
+                          </Link>
                         </div>
                       </li>
                     </>
@@ -310,6 +320,7 @@ export default function PostDetailsPage({
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }

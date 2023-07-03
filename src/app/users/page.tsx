@@ -3,6 +3,8 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import Link from "next/link";
 import { getUsers } from "@/services/get-user";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface User {
   id: number;
@@ -45,8 +47,9 @@ export default function UsersPage() {
 
   return (
     <>
+      <Navbar />
       <div className="container mx-auto py-8">
-        <h2 className="text-center text-2xl mt-3">Search Users</h2>
+        <h2 className="text-center text-2xl text-bold">Search Users</h2>
 
         <form className="flex items-center mt-3 mx-4 md:mx-14">
           <label htmlFor="simple-search" className="sr-only">
@@ -96,6 +99,7 @@ export default function UsersPage() {
           )}
         </ul>
       </div>
+      <Footer />
     </>
   );
 }

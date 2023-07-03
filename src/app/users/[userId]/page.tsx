@@ -6,6 +6,8 @@ import { getPostsByUserId } from "@/services/get-post-by-userid";
 import { FollowUser, UnfollowUser } from "@/services/follow-unfollow-user";
 import LikeDislikePost from "@/components/LikeDislikePost";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function UserDetailsPage({
   params,
@@ -95,6 +97,7 @@ export default function UserDetailsPage({
 
   return (
     <>
+      <Navbar />
       {user && (
         <div>
           <div className="flex flex-col items-center pb-5 mt-5">
@@ -158,7 +161,9 @@ export default function UserDetailsPage({
                             </p>
                             <hr />
                           </Link>
-                          <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                          <div className="flex justify-center">
+                            <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                          </div>
                           <p className="text-center justify-center text-xs">
                             Created at:{" "}
                             {new Date(post.created_at).toLocaleDateString(
@@ -179,7 +184,9 @@ export default function UserDetailsPage({
                             </p>
                             <hr />
                           </Link>
-                          <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                          <div className="flex justify-center">
+                            <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                          </div>
                           <p className="text-center justify-center text-xs">
                             Created at:{" "}
                             {new Date(post.created_at).toLocaleDateString(
@@ -196,6 +203,7 @@ export default function UserDetailsPage({
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 }

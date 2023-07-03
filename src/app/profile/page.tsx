@@ -5,6 +5,8 @@ import { getProfile } from "@/services/profile";
 import { getPostsByUserId } from "@/services/get-post-by-userid";
 import Link from "next/link";
 import LikeDislikePost from "@/components/LikeDislikePost";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function Profile() {
   const [user, setUser] = useState<any>();
@@ -25,6 +27,7 @@ export default function Profile() {
 
   return (
     <>
+      <Navbar />
       {user && posts && (
         <>
           <div className="">
@@ -52,12 +55,6 @@ export default function Profile() {
                   Following: {user.following}
                 </span>
               </div>
-              <Link
-                className="bg-blue-500 text-white rounded px-2 py-1 mt-2"
-                href={"/edit"}
-              >
-                Edit Profile
-              </Link>
             </div>
             <span className="flex text-center justify-center">My Posts</span>
             <ul className="flex flex-col items-center justify-center text-center mt-3">
@@ -80,7 +77,9 @@ export default function Profile() {
                           </p>
                           <hr />
                         </Link>
-                        <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                        <div className="flex justify-center">
+                          <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                        </div>
                         <p className="text-center justify-center text-xs ">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(
@@ -101,7 +100,9 @@ export default function Profile() {
                           </p>
                           <hr />
                         </Link>
-                        <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                        <div className="flex justify-center">
+                          <LikeDislikePost idPost={post.id}></LikeDislikePost>
+                        </div>
                         <p className="text-center justify-center text-xs">
                           Created at:{" "}
                           {new Date(post.created_at).toLocaleDateString(
@@ -115,6 +116,7 @@ export default function Profile() {
               ))}
             </ul>
           </div>
+          <Footer />
         </>
       )}
     </>

@@ -109,16 +109,17 @@ export default function LikeDislikeComment({
 
   return (
     <>
-      <div className='text-left justify-left flex flex-wrap my-1 text-3xl'>
+      <div className="text-left justify-left flex flex-wrap text-xl">
         <button
           onClick={() => handleLikeComment(idComment)}
           className={`${
             likedComment.includes(idComment) ? "text-blue-500" : "text-gray-500"
-          } hover:text-blue-500`}>
+          } hover:text-blue-500`}
+        >
           {likedComment.includes(idComment) ? (
-            <AiFillLike className='inline-block' />
+            <AiFillLike className="inline-block" />
           ) : (
-            <AiOutlineLike className='inline-block' />
+            <AiOutlineLike className="inline-block" />
           )}
         </button>
         <button
@@ -127,11 +128,12 @@ export default function LikeDislikeComment({
             dislikedComment.includes(idComment)
               ? "text-red-500"
               : "text-gray-500"
-          } hover:text-red-500`}>
+          } hover:text-red-500`}
+        >
           {dislikedComment.includes(idComment) ? (
-            <AiFillDislike className='inline-block' />
+            <AiFillDislike className="inline-block" />
           ) : (
-            <AiOutlineDislike className='inline-block' />
+            <AiOutlineDislike className="inline-block" />
           )}
         </button>
       </div>

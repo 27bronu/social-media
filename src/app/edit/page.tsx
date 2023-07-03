@@ -132,117 +132,135 @@ const EditAccount = () => {
     router.push("/delete");
   };
 
+  const handleGoBack = () => {
+    router.back(); // Volta para a página anterior
+  };
+
   return (
     <main>
       {showPopup && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'>
-          <div className='bg-white p-8 rounded-lg'>
-            <h2 className='text-2xl font-bold text-blue-900 mb-4'>ALERT</h2>
-            <p className='text-lg'>{popupMessage}</p>
-            <div className='flex justify-center mt-8'>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+          <div className="bg-white p-7 rounded-lg">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4">ALERT</h2>
+            <p className="text-lg">{popupMessage}</p>
+            <div className="flex justify-center mt-8">
               <button
-                className='bg-blue-900 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded'
-                onClick={() => setShowPopup(false)}>
+                className="bg-blue-900 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded"
+                onClick={() => setShowPopup(false)}
+              >
                 Close
               </button>
             </div>
           </div>
         </div>
       )}
-      <div className='relative bg-gray-900 flex flex-col items-center justify-center h-screen'>
-        <div className='bg-gray-500 text-black px-6 py-2 rounded-lg'>
-          <div className='box-border h-5/5 mt-2 mb-2 w-72 bg-white rounded-lg p-2 border-1 border-blue-900 shadow-2xl flex flex-col justify-start items-center'>
-            <h1 className='text-3xl font-bold'>Edit Profile</h1>
-            <div className='rounded-lg p-4 mb-4'>
-              <div className='w-24 h-24 mx-auto mt-4 mb-2'>
+      <div className="relative bg-gray-900 flex flex-col items-center justify-center h-screen">
+        <div className="bg-gray-500 text-black px-6 py-2 rounded-lg">
+          <div className="box-border h-5/5 mt-2 mb-2 w-74 bg-white rounded-lg p-2 border-1 border-blue-900 shadow-2xl flex flex-col justify-center text-center items-center">
+            <h1 className="text-3xl font-bold">Edit Profile</h1>
+            <div className="rounded-lg p-4 mb-4">
+              <div className="w-24 h-24 mx-auto mt-4 mb-2">
                 {mediaPreview ? (
                   <img
                     src={mediaPreview}
-                    alt='Profile'
-                    className='w-full h-full rounded-full'
+                    alt="Profile"
+                    className="w-full h-full rounded-full"
                   />
                 ) : (
-                  <div className='w-full h-full mt-1 p-2 rounded-full text-white bg-gray-900 flex items-center'>
+                  <div className="w-full h-full mt-1 p-2 rounded-full text-white bg-gray-900 flex items-center">
                     No profile picture
                   </div>
                 )}
               </div>
 
-              <div className='text-sm mb-8'></div>
+              <div className="text-sm mb-8"></div>
               <label
-                htmlFor='profilePicture'
-                className='bg-blue-900 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded cursor-pointer'>
+                htmlFor="profilePicture"
+                className="bg-blue-900 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded cursor-pointer"
+              >
                 Change Profile Picture
                 <input
-                  type='file'
-                  id='profilePicture'
-                  className='hidden'
-                  accept='image/*'
+                  type="file"
+                  id="profilePicture"
+                  className="hidden"
+                  accept="image/*"
                   onChange={handleProfilePictureChange}
                 />
               </label>
             </div>
-            <form className='w-full max-w-sm'>
-              <div className='mb-4'>
+            <form className="w-full max-w-sm">
+              <div className="mb-4">
                 <label
-                  htmlFor='username'
-                  className='block text-gray-700 font-bold mb-2'>
+                  htmlFor="username"
+                  className="block text-gray-700 font-bold mb-2"
+                >
                   Username
                 </label>
                 <input
-                  type='text'
-                  id='username'
-                  className='mt-1 p-2 border-2 border-blue-900'
-                  placeholder='Change your username'
+                  type="text"
+                  id="username"
+                  className="mt-1 p-2 border-2 border-blue-900"
+                  placeholder="Change your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
 
-              <div className='mb-4'>
+              <div className="mb-4">
                 <label
-                  htmlFor='name'
-                  className='block text-gray-700 font-bold mb-2'>
+                  htmlFor="name"
+                  className="block text-gray-700 font-bold mb-2"
+                >
                   Name
                 </label>
                 <input
-                  type='text'
-                  id='name'
-                  className='mt-1 p-2 border-2 border-blue-900'
-                  placeholder='Change your name'
+                  type="text"
+                  id="name"
+                  className="mt-1 p-2 border-2 border-blue-900"
+                  placeholder="Change your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
-              <div className='mb-4'>
+              <div className="mb-4">
                 <label
-                  htmlFor='password'
-                  className='block text-gray-700 font-bold mb-2'>
+                  htmlFor="password"
+                  className="block text-gray-700 font-bold mb-2"
+                >
                   Password
                 </label>
                 <input
-                  type='password'
-                  id='password'
-                  className='mt-1 p-2 border-2 border-blue-900'
-                  placeholder='Change your password'
+                  type="password"
+                  id="password"
+                  className="mt-1 p-2 border-2 border-blue-900"
+                  placeholder="Change your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
 
-              <div className='flex justify-center'>
+              <div className="flex justify-center">
                 <button
-                  type='button'
-                  className='bg-blue-900 hover:bg-blue-900 text-white font-bold py-2 px-6 rounded'
-                  onClick={handleSaveChanges}>
+                  type="button"
+                  className="bg-blue-900 hover:bg-blue-900  text-white font-bold py-2 px-6 rounded"
+                  onClick={handleSaveChanges}
+                >
                   Save Changes
                 </button>
                 <button
-                  type='button'
-                  className='bg-red-900 hover:bg-red-900 text-white font-bold py-2 ml-2 px-6 rounded'
-                  onClick={handleDeleteAccount}>
+                  type="button"
+                  className="bg-red-900 hover:bg-red-900 text-white font-bold py-2 ml-2 px-6 rounded"
+                  onClick={handleDeleteAccount}
+                >
                   Delete Account
+                </button>
+                <button
+                  type="button"
+                  className="bg-gray-900 hover:bg-gray-900 text-white  font-bold py-2 ml-2 px-6 rounded"
+                  onClick={handleGoBack}
+                >
+                  Go Back
                 </button>
               </div>
             </form>

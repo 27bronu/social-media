@@ -10,6 +10,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LikeDislikeComment from "@/components/LikeDislikeComment";
 import LikeDislikeResponse from "@/components/LikeDislikeResponse";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function CommentDetailsPage({
   params,
@@ -123,6 +125,7 @@ export default function CommentDetailsPage({
 
   return (
     <>
+      <Navbar />
       <div className="">
         {user ? (
           <>
@@ -314,6 +317,7 @@ export default function CommentDetailsPage({
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }
