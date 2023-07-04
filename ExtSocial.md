@@ -188,6 +188,7 @@ Install the dependencies and devDependencies and start the server.
 ```sh
 cd social-media
 yarn install
+yarn dev
 ```
 
 ## License
