@@ -47,21 +47,21 @@ export default function Profile() {
                   alt="Default image"
                 />
               )}
-              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+              <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-black">
                 @{user.username}
               </h5>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-sm text-gray-600 dark:text-gray-600">
                 {user.name}
               </span>
               <br />
               <div className="flex flex-wrap">
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-600 dark:text-gray-600 p-2">
                   Posts: {user.posts}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-600 dark:text-gray-600 p-2">
                   Followers: {user.followers}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                <span className="text-sm text-gray-600 dark:text-gray-600 p-2">
                   Following: {user.following}
                 </span>
               </div>
