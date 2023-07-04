@@ -284,7 +284,7 @@ export default function PostDetailsPage({
                             className="text-blue-300 "
                             href={`/comments/${comment.id}`}
                           >
-                            Show Comments Details
+                            Show Comment Details
                           </Link>
                         </div>
                       </li>
