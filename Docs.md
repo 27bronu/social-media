@@ -142,41 +142,41 @@ _Página inicial da rede social. Aqui tens duas opções: Join now se ainda não
 _Página para registar um novo usuário. Aqui escreves o teu email, username, name e password para criar uma nova conta._
 
 # Login
-![Login] (Login.png)
+![Login](Login.png)
 _Página para iniciar sessão na conta de um usuário. Aqui escreves o teu  username e password para iniciar sessão._
 
 # Feed
-![Feed] (Feed.png)
+![Feed](Feed.png)
 _Feed principal. Aqui podes criar posts, apagar posts, ver posts, dar like nos posts, escrever comentários, dar like nos comentários, ir ao teu perfil, procurar utilizadores e ver os liked posts._
 
 # Users
-![Users] (Users.png)
+![Users](Users.png)
 _Página para ver todos os users registados. Aqui podes procurar um perfil digitando o username da pessoa e podes clicar no user para ir para o perfil dele._
 
 # Profile User
-![ProfileUser] (ProfileUser.png)
+![ProfileUser](ProfileUser.png)
 _Página para ver o profile do user. Aqui podes seguir o user, clicar nos posts do user e dar like e dislike nos posts do user._
 
 # Posts
-![Posts] (Posts.png)
+![Posts](Posts.png)
 _Página para ver o post do user. Aqui podes dar like e dislike no post do user, criar comentários no post, dar like/dislike nos posts do user e se os comments tiverem uma imagem dá para mostrar essa imagem._
 
 # Liked Posts
-![LikedPosts] (LikedPosts.png)
+![LikedPosts](LikedPosts.png)
 _Página para ver os liked posts do user._
 
 # Profile
-![Profile] (Profile.png)
+![Profile](Profile.png)
 _Página para ver o profile do user.Aqui dá para ver os posts do user, ver quantos posts tem, followers e following._
 
 
 # Edit Profile
-![EditProfile] (EditProfile.png)
+![EditProfile](EditProfile.png)
 _Página para editar do user.Aqui dá para alterar a profile picture, username, name e password. Também tem um botão de save changes para guardar as alterações, delete account para ir para a página dele account e go back para voltar para o perfil do user._
 
 
 # Delete Account
-![DeleteAccount] (DeleteAccount.png)
+![DeleteAccount](DeleteAccount.png)
 _Página para apagar a conta de um user.Escreve-se as informações do user e confirma-se pela segundavez que se quer apagar a conta. Se o user confirmar, a conta é apagada e não tem como recupera-la._
 
 ## Instalação
@@ -185,10 +185,21 @@ ExtSocial requires [Node.js](https://nodejs.org/) v10+ to run.
 
 Install the dependencies and devDependencies and start the server.
 
-```sh
+```bash
 cd social-media
+npm i
+# or
 yarn install
+# or
+pnpm i
+```
+
+```bash
+npm run dev
+# or
 yarn dev
+# or
+pnpm dev
 ```
 
 ## License
