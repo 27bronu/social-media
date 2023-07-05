@@ -218,3 +218,14 @@ MIT
 
 - tive alguma dificuldade em perceber o código pois nunca tinha usado.
 - algumas funções não ficaram como esperado.
+
+### Guilherme Barradas
+#### Gostei:
+
+- Trabalhar em equipa.
+- Usar frameworks e bibliotecas novas para a resolução dos problemas.
+
+#### Não gostei:
+
+- A pressão devido ao tempo dado e à complexidade do projeto.
+- Alguma falta de comunicação entre o grupo.
