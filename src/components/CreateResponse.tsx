@@ -13,7 +13,7 @@ export default function CreateResponseForm({
   username: string;
 }) {
   const [responseInput, setResponseInput] = useState("");
-  const [imageResponseInput, setimageResponseInput] = useState("");
+  const [imageResponseInput, setimageResponseInput] = useState<any>("");
   const [showResponseInput, setShowResponseInput] = useState(false);
   const [responses, setResponses] = useState<any>([]);
 
