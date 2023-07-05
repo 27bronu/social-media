@@ -40,10 +40,10 @@ _Coisas que são possível fazer na nossa rede social_
 
 ## Linguagens/tecnologias utilizadas
 
-- [Next.js] - React framework that gives you building blocks to create web applications!
-- [TypeScript] - TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
-- [Tailwind CSS] - Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.
-- [Axios] - Axios is a promised-based HTTP client for JavaScript. 
+- Next.js - React framework that gives you building blocks to create web applications!
+- TypeScript - TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
+- Tailwind CSS - Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.
+- Axios - Axios is a promised-based HTTP client for JavaScript. 
 
 ## Bibliotecas utilizadas
 
@@ -202,10 +202,6 @@ yarn dev
 pnpm dev
 ```
 
-## License
-
-MIT
-
 ## Dificuldades
 
 ### Miguel Paulo
@@ -240,3 +236,7 @@ MIT
 
 - O projeto era um pouco dificil demais para quem nunca tinha tocado em next.js e tailwind css.
 - Falta de organização do grupo.
+
+## License
+
+MIT
