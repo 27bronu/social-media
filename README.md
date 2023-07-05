@@ -206,3 +206,15 @@ pnpm dev
 
 MIT
 
+## Dificuldades
+
+### Miguel Paulo
+#### Gostei:
+
+- trabalhar em equipa com uso do github e git.
+- aprender uma nova linguagem e framework.
+
+#### Não gostei:
+
+- tive alguma dificuldade em perceber o código pois nunca tinha usado.
+- algumas funções não ficaram como esperado.
