@@ -229,3 +229,14 @@ MIT
 
 - A pressão devido ao tempo dado e à complexidade do projeto.
 - Alguma falta de comunicação entre o grupo.
+
+### Bruno Neto
+#### Gostei:
+
+- Trabalhar com git.
+- Aprender duas novas frameworks muito conhecidas.
+
+#### Não gostei:
+
+- O projeto era um pouco dificil demais para quem nunca tinha tocado em next.js e tailwind css.
+- Falta de organização do grupo.
